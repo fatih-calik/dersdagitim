@@ -55,6 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Google.OrTools" Version="9.11.4210" />
     <!-- Geri dönüş: 9.8.3293 | Denenen diğer: 9.15.6755 -->

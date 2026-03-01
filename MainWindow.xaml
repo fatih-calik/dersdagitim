@@ -144,16 +144,16 @@
                     <ScrollViewer x:Name="DashboardPanel" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <StackPanel>
                             <!-- Modern Header with Logo -->
-                            <Grid Margin="0,0,0,24">
+                            <Grid Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Border Width="64" Height="64" Background="{DynamicResource PrimaryLightBrush}" CornerRadius="16" Margin="0,0,16,0">
-                                    <Image Source="/Resources/app.png" Margin="10" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <Border Width="48" Height="48" Background="{DynamicResource PrimaryLightBrush}" CornerRadius="12" Margin="0,0,12,0">
+                                    <Image Source="/Resources/app.png" Margin="8" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 </Border>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="Genel Durum" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Genel Durum" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                     <TextBlock Text="Ders Dağıtım Planlama Sistemi" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 </StackPanel>
                             </Grid>
@@ -170,8 +170,8 @@
                             </Grid.ColumnDefinitions>
                             
                             <!-- Database Card - Updated Style - Clickable -->
-                            <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}" CornerRadius="10" 
-                                    Padding="12" Margin="0,0,10,0" Cursor="Hand" MouseLeftButtonDown="SelectDatabase_Click" MouseRightButtonDown="ValidateDatabase_Click" ToolTip="Sol tık: Değiştir / Sağ tık: Veri Kontrolü">
+                            <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}" CornerRadius="10"
+                                    Padding="8" Margin="0,0,6,0" Cursor="Hand" MouseLeftButtonDown="SelectDatabase_Click" MouseRightButtonDown="ValidateDatabase_Click" ToolTip="Sol tık: Değiştir / Sağ tık: Veri Kontrolü">
                                 <Border.Effect>
                                     <DropShadowEffect Color="#000000" BlurRadius="12" ShadowDepth="2" Opacity="0.05"/>
                                 </Border.Effect>
@@ -184,80 +184,80 @@
                             </Border>
                             
                             <!-- Teacher Count Card - Clickable -->
-                            <Border Grid.Column="1" Background="{DynamicResource SurfaceBrush}" CornerRadius="10" 
-                                    Padding="12" Margin="0,0,10,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_TeachersCard_Click">
+                            <Border Grid.Column="1" Background="{DynamicResource SurfaceBrush}" CornerRadius="10"
+                                    Padding="8" Margin="0,0,6,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_TeachersCard_Click">
                                 <Border.Effect>
                                     <DropShadowEffect Color="#000000" BlurRadius="12" ShadowDepth="2" Opacity="0.05"/>
                                 </Border.Effect>
                                 <StackPanel HorizontalAlignment="Center">
                                     <TextBlock Text="👨‍🏫 Öğretmen" Foreground="{DynamicResource TextSecondaryBrush}" 
                                                FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
-                                    <TextBlock x:Name="TeacherCount" Text="0" FontSize="24" FontWeight="Bold"
+                                    <TextBlock x:Name="TeacherCount" Text="0" FontSize="20" FontWeight="Bold"
                                                Foreground="{DynamicResource PrimaryBrush}" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                             
                             <!-- Class Count Card - Clickable -->
-                            <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" CornerRadius="10" 
-                                    Padding="12" Margin="0,0,10,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_ClassesCard_Click">
+                            <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" CornerRadius="10"
+                                    Padding="8" Margin="0,0,6,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_ClassesCard_Click">
                                 <Border.Effect>
                                     <DropShadowEffect Color="#000000" BlurRadius="12" ShadowDepth="2" Opacity="0.05"/>
                                 </Border.Effect>
                                 <StackPanel HorizontalAlignment="Center">
                                     <TextBlock Text="🏫 Sınıflar" Foreground="{DynamicResource TextSecondaryBrush}" 
                                                FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
-                                    <TextBlock x:Name="ClassCount" Text="0" FontSize="24" FontWeight="Bold"
+                                    <TextBlock x:Name="ClassCount" Text="0" FontSize="20" FontWeight="Bold"
                                                Foreground="{DynamicResource PrimaryBrush}" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                             
                             <!-- Lesson Count Card - Clickable -->
-                            <Border Grid.Column="3" Background="{DynamicResource SurfaceBrush}" CornerRadius="10" 
-                                    Padding="12" Margin="0,0,10,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_LessonsCard_Click">
+                            <Border Grid.Column="3" Background="{DynamicResource SurfaceBrush}" CornerRadius="10"
+                                    Padding="8" Margin="0,0,6,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_LessonsCard_Click">
                                 <Border.Effect>
                                     <DropShadowEffect Color="#000000" BlurRadius="12" ShadowDepth="2" Opacity="0.05"/>
                                 </Border.Effect>
                                 <StackPanel HorizontalAlignment="Center">
                                     <TextBlock Text="📖 Dersler" Foreground="{DynamicResource TextSecondaryBrush}" 
                                                FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
-                                    <TextBlock x:Name="LessonCount" Text="0" FontSize="24" FontWeight="Bold"
+                                    <TextBlock x:Name="LessonCount" Text="0" FontSize="20" FontWeight="Bold"
                                                Foreground="{DynamicResource PrimaryBrush}" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                             
                             <!-- Placement Card (Green) - Clickable -->
-                            <Border Grid.Column="4" Background="{DynamicResource SuccessLightBrush}" CornerRadius="10" 
-                                    Padding="12" Margin="0,0,10,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_DistributionCard_Click">
+                            <Border Grid.Column="4" Background="{DynamicResource SuccessLightBrush}" CornerRadius="10"
+                                    Padding="8" Margin="0,0,6,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_DistributionCard_Click">
                                 <Border.Effect>
                                     <DropShadowEffect Color="#10B981" BlurRadius="12" ShadowDepth="2" Opacity="0.1"/>
                                 </Border.Effect>
                                 <StackPanel HorizontalAlignment="Center">
                                     <TextBlock Text="✅ Yerleşim" Foreground="{DynamicResource SuccessBrush}" 
                                                FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
-                                    <TextBlock x:Name="PlacementPercent" Text="%0" FontSize="24" FontWeight="Bold" 
+                                    <TextBlock x:Name="PlacementPercent" Text="%0" FontSize="20" FontWeight="Bold" 
                                                Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                             
                             <!-- Gaps Card (Yellow) - Clickable -->
-                            <Border Grid.Column="5" Background="{DynamicResource WarningLightBrush}" CornerRadius="10" 
-                                    Padding="12" Cursor="Hand" MouseLeftButtonDown="Dashboard_DistributionCard_Click">
+                            <Border Grid.Column="5" Background="{DynamicResource WarningLightBrush}" CornerRadius="10"
+                                    Padding="8" Cursor="Hand" MouseLeftButtonDown="Dashboard_DistributionCard_Click">
                                 <Border.Effect>
                                     <DropShadowEffect Color="#F59E0B" BlurRadius="12" ShadowDepth="2" Opacity="0.1"/>
                                 </Border.Effect>
                                 <StackPanel HorizontalAlignment="Center">
                                     <TextBlock Text="⚠️ Boşluk" Foreground="{DynamicResource WarningBrush}" 
                                                FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
-                                    <TextBlock x:Name="TotalGaps" Text="0" FontSize="24" FontWeight="Bold" 
+                                    <TextBlock x:Name="TotalGaps" Text="0" FontSize="20" FontWeight="Bold" 
                                                Foreground="{DynamicResource WarningBrush}" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                         </Grid>
                         
                         <!-- Günlük Durum ve Nöbetler -->
-                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="15" Margin="0,20,0,0" CornerRadius="{StaticResource CardCornerRadius}">
+                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,10,0,0" CornerRadius="{StaticResource CardCornerRadius}">
                             <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                     <TextBlock Text="📅" FontSize="18" Margin="0,0,8,0"/>
                                     <TextBlock Text="Haftalık Nöbet Çizelgesi" FontWeight="Bold" FontSize="16"/>
                                 </StackPanel>
@@ -272,7 +272,7 @@
                                     </Grid.ColumnDefinitions>
                                     
                                     <!-- Pazartesi -->
-                                    <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,5,0">
+                                    <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6" Margin="0,0,3,0">
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                                 <TextBlock Text="Pazartesi" FontWeight="Bold"/>
@@ -291,7 +291,7 @@
                                     </Border>
                                     
                                     <!-- Salı -->
-                                    <Border Grid.Column="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,5,0">
+                                    <Border Grid.Column="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6" Margin="0,0,3,0">
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                                 <TextBlock Text="Salı" FontWeight="Bold"/>
@@ -310,7 +310,7 @@
                                     </Border>
                                     
                                     <!-- Çarşamba -->
-                                    <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,5,0">
+                                    <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6" Margin="0,0,3,0">
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                                 <TextBlock Text="Çarşamba" FontWeight="Bold"/>
@@ -329,7 +329,7 @@
                                     </Border>
                                     
                                     <!-- Perşembe -->
-                                    <Border Grid.Column="3" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,5,0">
+                                    <Border Grid.Column="3" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6" Margin="0,0,3,0">
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                                 <TextBlock Text="Perşembe" FontWeight="Bold"/>
@@ -348,7 +348,7 @@
                                     </Border>
                                     
                                     <!-- Cuma -->
-                                    <Border Grid.Column="4" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10">
+                                    <Border Grid.Column="4" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="6">
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                                 <TextBlock Text="Cuma" FontWeight="Bold"/>
@@ -370,9 +370,9 @@
                         </Border>
                         
                         <!-- En Çok Boşluğu Olanlar -->
-                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="15" Margin="0,20,0,0" CornerRadius="{StaticResource CardCornerRadius}">
+                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,10,0,0" CornerRadius="{StaticResource CardCornerRadius}">
                             <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                     <TextBlock Text="⚠️" FontSize="18" Margin="0,0,8,0"/>
                                     <TextBlock Text="En Çok Boşluğu Olanlar" FontWeight="Bold" FontSize="16"/>
                                 </StackPanel>
@@ -388,9 +388,9 @@
                     <ScrollViewer x:Name="SettingsPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                         <!-- Header -->
-                        <Grid Margin="0,0,0,20">
+                        <Grid Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="Okul Ayarları" FontSize="24" FontWeight="Bold"/>
+                                <TextBlock Text="Okul Ayarları" FontSize="20" FontWeight="Bold"/>
                                 <TextBlock Text="Okul bilgilerini, zaman tablosunu ve tanımları yönetin" Foreground="Gray"/>
                             </StackPanel>
                             <Button Content="✓ Ayarları Kaydet" Click="SaveSchoolInfo_Click" 
@@ -399,7 +399,7 @@
                         </Grid>
                         
                         <!-- Genel Bilgiler -->
-                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,0,15" CornerRadius="{StaticResource CardCornerRadius}">
+                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8" Margin="0,0,0,8" CornerRadius="{StaticResource CardCornerRadius}">
                             <StackPanel>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -427,7 +427,7 @@
                         </Border>
                         
                         <!-- Varsayılan Zaman Tablosu -->
-                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,0,15" CornerRadius="{StaticResource CardCornerRadius}">
+                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8" Margin="0,0,0,8" CornerRadius="{StaticResource CardCornerRadius}">
                             <StackPanel>
                                 <TextBlock Text="Varsayılan Zaman Tablosu" FontWeight="Bold" Margin="0,0,0,5" FontSize="12"/>
                                 <TextBlock Text="Hücrelere tıklayarak açık/kapalı değiştirin. A=Açık, K=Kapalı" 
@@ -439,14 +439,14 @@
                         </Border>
                         
                         <!-- Eğitsel Kulüpler & Nöbet Yerleri & Binalar & Ortak Mekanlar (Yan Yana) -->
-                        <Grid Margin="0,0,0,20">
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="8"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="8"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="8"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             
@@ -459,7 +459,7 @@
                                         <Button Content="+" Click="AddClub_Click" HorizontalAlignment="Right" 
                                                 Width="24" Height="24" Padding="0"/>
                                     </Grid>
-                                    <ListBox x:Name="ClubsList" Height="120" BorderThickness="0" FontSize="11">
+                                    <ListBox x:Name="ClubsList" Height="100" BorderThickness="0" FontSize="11">
                                         <ListBox.ContextMenu>
                                             <ContextMenu>
                                                 <MenuItem Header="Sil" Click="DeleteClub_Click"/>
@@ -478,7 +478,7 @@
                                         <Button Content="+" Click="AddDutyLocation_Click" HorizontalAlignment="Right" 
                                                 Width="24" Height="24" Padding="0"/>
                                     </Grid>
-                                    <ListBox x:Name="DutyLocationsList" Height="120" BorderThickness="0" FontSize="11">
+                                    <ListBox x:Name="DutyLocationsList" Height="100" BorderThickness="0" FontSize="11">
                                         <ListBox.ContextMenu>
                                             <ContextMenu>
                                                 <MenuItem Header="Sil" Click="DeleteDutyLocation_Click"/>
@@ -497,7 +497,7 @@
                                         <Button Content="+" Click="AddBuilding_Click" HorizontalAlignment="Right" 
                                                 Width="24" Height="24" Padding="0"/>
                                     </Grid>
-                                    <ListBox x:Name="BuildingsList" Height="120" BorderThickness="0" FontSize="11">
+                                    <ListBox x:Name="BuildingsList" Height="100" BorderThickness="0" FontSize="11">
                                         <ListBox.ContextMenu>
                                             <ContextMenu>
                                                 <MenuItem Header="Sil" Click="DeleteBuilding_Click"/>
@@ -516,7 +516,7 @@
                                         <Button Content="+" Click="AddOrtakMekan_Click" HorizontalAlignment="Right" 
                                                 Width="24" Height="24" Padding="0"/>
                                     </Grid>
-                                    <ListBox x:Name="OrtakMekanList" Height="120" BorderThickness="0" FontSize="11">
+                                    <ListBox x:Name="OrtakMekanList" Height="100" BorderThickness="0" FontSize="11">
                                         <ListBox.ContextMenu>
                                             <ContextMenu>
                                                 <MenuItem Header="Sil" Click="DeleteOrtakMekan_Click"/>
@@ -528,19 +528,19 @@
                         </Grid>
                         
                         <!-- Lisans ve Güvenlik (Yan Yana) -->
-                        <Grid Margin="0,0,0,20">
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="8"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="8"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="8"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
                             <!-- Ders Havuzu Paneli (Was Col 6, Now Col 0) -->
-                            <Border Grid.Column="0" Background="{DynamicResource InfoLightBrush}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1" Padding="15" CornerRadius="{StaticResource CardCornerRadius}">
+                            <Border Grid.Column="0" Background="{DynamicResource InfoLightBrush}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1" Padding="10" CornerRadius="{StaticResource CardCornerRadius}">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                         <TextBlock Text="📚" FontSize="16" Margin="0,0,8,0"/>
@@ -552,7 +552,7 @@
                             </Border>
 
                             <!-- Lisans Bilgisi (Was Col 0, Now Col 2) -->
-                            <Border Grid.Column="2" Background="{DynamicResource InfoLightBrush}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1" Padding="15" CornerRadius="{StaticResource CardCornerRadius}">
+                            <Border Grid.Column="2" Background="{DynamicResource InfoLightBrush}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1" Padding="10" CornerRadius="{StaticResource CardCornerRadius}">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                         <TextBlock Text="🔑" FontSize="16" Margin="0,0,8,0"/>
@@ -579,7 +579,7 @@
                             </Border>
 
                             <!-- Giriş ve Güvenlik Ayarları (Was Col 2, Now Col 4) -->
-                            <Border Grid.Column="4" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1" Padding="15" CornerRadius="{StaticResource CardCornerRadius}">
+                            <Border Grid.Column="4" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1" Padding="10" CornerRadius="{StaticResource CardCornerRadius}">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                         <TextBlock Text="🛡️" FontSize="16" Margin="0,0,8,0"/>
@@ -625,7 +625,7 @@
                             </Border>
 
                             <!-- Güncelleme Paneli (Was Col 4, Now Col 6) -->
-                            <Border Grid.Column="6" Background="{DynamicResource SuccessLightBrush}" BorderBrush="{DynamicResource SuccessBrush}" BorderThickness="1" Padding="15" CornerRadius="{StaticResource CardCornerRadius}">
+                            <Border Grid.Column="6" Background="{DynamicResource SuccessLightBrush}" BorderBrush="{DynamicResource SuccessBrush}" BorderThickness="1" Padding="10" CornerRadius="{StaticResource CardCornerRadius}">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                         <TextBlock Text="🚀" FontSize="16" Margin="0,0,8,0"/>
@@ -657,7 +657,7 @@
                         </Grid>
                         
                         <!-- Tehlikeli Bölge (Danger Zone) -->
-                        <Border Background="{DynamicResource ErrorLightBrush}" BorderBrush="{DynamicResource ErrorBrush}" BorderThickness="1" Padding="15" Margin="0,0,0,20" CornerRadius="{StaticResource CardCornerRadius}">
+                        <Border Background="{DynamicResource ErrorLightBrush}" BorderBrush="{DynamicResource ErrorBrush}" BorderThickness="1" Padding="10" Margin="0,0,0,10" CornerRadius="{StaticResource CardCornerRadius}">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                     <TextBlock Text="⚠️" FontSize="16" Margin="0,0,8,0"/>
@@ -667,25 +667,25 @@
                                 
                                 <WrapPanel>
                                     <!-- Öğretmen Atamalarını Sıfırla -->
-                                    <StackPanel Margin="0,0,20,10">
+                                    <StackPanel Margin="0,0,12,6">
                                         <Button Content="🔄 Öğretmen Atamalarını Sıfırla" Click="ResetTeacherAssignments_Click"
-                                                Padding="12,8" Background="#F97316" Foreground="White" BorderThickness="0"/>
+                                                Padding="10,6" Background="#F97316" Foreground="White" BorderThickness="0"/>
                                         <TextBlock Text="Tüm derslerdeki öğretmen atamalarını iptal eder." 
                                                    FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,0"/>
                                     </StackPanel>
                                     
                                     <!-- Ek Ders Verilerini Sil -->
-                                    <StackPanel Margin="0,0,20,10">
+                                    <StackPanel Margin="0,0,12,6">
                                         <Button Content="💰 Ek Ders Verilerini Sil" Click="DeleteEkDersData_Click"
-                                                Padding="12,8" Background="#EF4444" Foreground="White" BorderThickness="0"/>
+                                                Padding="10,6" Background="#EF4444" Foreground="White" BorderThickness="0"/>
                                         <TextBlock Text="Aylık ek ders kayıtlarını tamamen siler." 
                                                    FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,0"/>
                                     </StackPanel>
                                     
                                     <!-- Dağıtımı Sıfırla -->
-                                    <StackPanel Margin="0,0,20,10">
+                                    <StackPanel Margin="0,0,12,6">
                                         <Button Content="📅 Dağıtımı Sıfırla" Click="ResetDistribution_Click"
-                                                Padding="12,8" Background="#7C3AED" Foreground="White" BorderThickness="0"/>
+                                                Padding="10,6" Background="#7C3AED" Foreground="White" BorderThickness="0"/>
                                         <TextBlock Text="Tüm dağıtım bloklarının yerleşimlerini temizler." 
                                                    FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,0"/>
                                     </StackPanel>
@@ -760,7 +760,7 @@
                     <!-- Teachers View - Compact -->
                     <Grid x:Name="TeachersPanel" Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="240"/>
+                            <ColumnDefinition Width="220"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         
@@ -775,7 +775,7 @@
                                 </Grid.RowDefinitions>
                                 
                                 <!-- Header -->
-                                <Grid Grid.Row="0" Margin="16,16,16,12">
+                                <Grid Grid.Row="0" Margin="12,10,12,8">
                                     <TextBlock Text="Öğretmenler" FontSize="16" FontWeight="Bold" 
                                                VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                     <Button Content="+" Click="AddTeacher_Click" HorizontalAlignment="Right" 
@@ -791,7 +791,7 @@
                                 </Grid>
                                 
                                 <!-- Search -->
-                                <Border Grid.Row="1" Margin="12,0,12,12" Background="{DynamicResource SurfaceBrush}" 
+                                <Border Grid.Row="1" Margin="10,0,10,8" Background="{DynamicResource SurfaceBrush}" 
                                         BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="8,4">
                                     <Grid>
                                         <TextBlock Text="🔍" VerticalAlignment="Center" Margin="4,0,0,0" 
@@ -811,7 +811,7 @@
                                          SelectionChanged="TeachersList_SelectionChanged" 
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         Padding="8,0">
+                                         Padding="6,0">
                                     <ListBox.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Header="Düzenle" Click="EditTeacherContext_Click">
@@ -867,15 +867,15 @@
                                                 </Grid.ColumnDefinitions>
                                                 
                                                 <!-- Initial Avatar -->
-                                                <Border Grid.Column="0" Width="30" Height="30" CornerRadius="15" 
+                                                <Border Grid.Column="0" Width="26" Height="26" CornerRadius="13"
                                                         Background="{Binding InitialColor}" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding Initial}" FontWeight="Bold" FontSize="11" 
+                                                    <TextBlock Text="{Binding Initial}" FontWeight="Bold" FontSize="10" 
                                                                Foreground="{Binding InitialTextColor}" 
                                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
                                                 
                                                 <!-- Text Info -->
-                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0">
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="4,0,0,0">
                                                     <DockPanel>
                                                         <!-- Icon removed -->
                                                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12" 
@@ -942,10 +942,10 @@
                             <!-- 1. Teacher Info (Header + Form) - FIXED AT TOP -->
                             <StackPanel x:Name="TeacherDetailPanel" Grid.Row="0" Visibility="Collapsed" Margin="0,0,0,10">
                                 <!-- Info Header -->
-                                <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="16,6">
+                                <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="12,4">
                                     <Grid>
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,12,0"/>
+                                            <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,12,0"/>
                                             <Border Background="{DynamicResource PrimaryLightBrush}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center" Margin="0,0,12,0">
                                                 <TextBlock Text="{Binding Position}" Foreground="{DynamicResource PrimaryDarkBrush}" FontSize="11" FontWeight="SemiBold"/>
                                             </Border>
@@ -964,7 +964,7 @@
                                 </Border>
                                 
                                 <!-- Form Fields -->
-                                <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="12">
+                                <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="8">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/> <!-- TC Label -->
@@ -1054,7 +1054,7 @@
                                     <Style TargetType="TabItem">
                                         <Setter Property="FontSize" Value="13"/>
                                         <Setter Property="FontWeight" Value="SemiBold"/>
-                                        <Setter Property="Padding" Value="12,6"/>
+                                        <Setter Property="Padding" Value="10,4"/>
                                         <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
                                         <Setter Property="Background" Value="Transparent"/>
                                         <Setter Property="Template">
@@ -1084,7 +1084,7 @@
 
                                 <!-- TAB 1: Ders Programı -->
                                 <TabItem Header="Ders Programı">
-                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
                                         <Border x:Name="TeacherTimetableArea" Background="{DynamicResource SurfaceBrush}" 
                                                 BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="8" Padding="20" Visibility="Collapsed" Margin="0,0,0,20">
                                             <StackPanel>
@@ -1105,7 +1105,7 @@
 
                                 <!-- TAB 2: Ek Ders -->
                                 <TabItem Header="Ek Ders">
-                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
                                         <Border x:Name="TeacherEkDersArea" Background="{DynamicResource SurfaceBrush}" 
                                                 BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="8" Padding="20" Visibility="Collapsed">
                                             <StackPanel>
@@ -1224,7 +1224,7 @@
                          </Grid.RowDefinitions>
                          
                          <!-- Header & Controls -->
-                         <Border Grid.Row="0" Margin="0,0,0,10" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="15">
+                         <Border Grid.Row="0" Margin="0,0,0,6" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="10">
                              <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -1255,19 +1255,19 @@
                                 
                                 <!-- Stats -->
                                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <StackPanel Margin="10,0">
-                                        <TextBlock Text="Yerleşen" FontSize="10" Foreground="Gray"/>
-                                        <TextBlock x:Name="StatPlaced" Text="%0" FontSize="18" FontWeight="Bold" Foreground="#10B981"/>
+                                    <StackPanel Margin="6,0">
+                                        <TextBlock Text="Yerleşen" FontSize="9" Foreground="Gray"/>
+                                        <TextBlock x:Name="StatPlaced" Text="%0" FontSize="16" FontWeight="Bold" Foreground="#10B981"/>
                                     </StackPanel>
-                                    <Rectangle Width="1" Fill="#E5E7EB" Margin="10,5"/>
-                                    <StackPanel Margin="10,0" Cursor="Hand" MouseLeftButtonUp="StatUnplaced_Click" ToolTip="Dağıtılamayan blokları görmek için tıklayın">
-                                        <TextBlock Text="Dağıtılamayan" FontSize="10" Foreground="Gray"/>
-                                        <TextBlock x:Name="StatUnplaced" Text="0" FontSize="18" FontWeight="Bold" Foreground="#EF4444"/>
+                                    <Rectangle Width="1" Fill="#E5E7EB" Margin="6,3"/>
+                                    <StackPanel Margin="6,0" Cursor="Hand" MouseLeftButtonUp="StatUnplaced_Click" ToolTip="Dağıtılamayan blokları görmek için tıklayın">
+                                        <TextBlock Text="Dağıtılamayan" FontSize="9" Foreground="Gray"/>
+                                        <TextBlock x:Name="StatUnplaced" Text="0" FontSize="16" FontWeight="Bold" Foreground="#EF4444"/>
                                     </StackPanel>
-                                    <Rectangle Width="1" Fill="#E5E7EB" Margin="10,5"/>
-                                    <StackPanel Margin="10,0">
-                                        <TextBlock Text="Boşluk (Saat)" FontSize="10" Foreground="Gray"/>
-                                        <TextBlock x:Name="StatGaps" Text="0" FontSize="18" FontWeight="Bold" Foreground="Orange"/>
+                                    <Rectangle Width="1" Fill="#E5E7EB" Margin="6,3"/>
+                                    <StackPanel Margin="6,0">
+                                        <TextBlock Text="Boşluk (Saat)" FontSize="9" Foreground="Gray"/>
+                                        <TextBlock x:Name="StatGaps" Text="0" FontSize="16" FontWeight="Bold" Foreground="Orange"/>
                                     </StackPanel>
                                 </StackPanel>
                                 
@@ -1286,13 +1286,13 @@
                             </Grid.ColumnDefinitions>
                             
                             <!-- Left: Teacher -->
-                            <Border Grid.Column="0" Margin="0,0,5,0" BorderBrush="#E5E7EB" BorderThickness="1">
+                            <Border Grid.Column="0" Margin="0,0,3,0" BorderBrush="#E5E7EB" BorderThickness="1">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <Border Background="#F9FAFB" Padding="10" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                                    <Border Background="#F9FAFB" Padding="6" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
                                         <DockPanel>
                                             <TextBlock x:Name="DistTeacherHeaderInfo" Text="Öğretmen" FontWeight="Bold" VerticalAlignment="Center"/>
                                             <ComboBox x:Name="DistTeacherCombo" Width="120" HorizontalAlignment="Right" 
@@ -1301,19 +1301,19 @@
                                     </Border>
                                     
                                     <ScrollViewer Grid.Row="1">
-                                        <StackPanel x:Name="DistTeacherGrid" Margin="10"/>
+                                        <StackPanel x:Name="DistTeacherGrid" Margin="6"/>
                                     </ScrollViewer>
                                 </Grid>
                             </Border>
                             
                             <!-- Right: Class -->
-                            <Border Grid.Column="1" Margin="5,0,0,0" BorderBrush="#E5E7EB" BorderThickness="1">
+                            <Border Grid.Column="1" Margin="3,0,0,0" BorderBrush="#E5E7EB" BorderThickness="1">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <Border Background="#F9FAFB" Padding="10" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                                    <Border Background="#F9FAFB" Padding="6" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
                                         <DockPanel>
                                             <TextBlock Text="Sınıf" FontWeight="Bold" VerticalAlignment="Center"/>
                                             <ComboBox x:Name="DistClassCombo" Width="140" HorizontalAlignment="Right"
@@ -1322,7 +1322,7 @@
                                     </Border>
                                     
                                     <ScrollViewer Grid.Row="1">
-                                        <StackPanel x:Name="DistClassGrid" Margin="10"/>
+                                        <StackPanel x:Name="DistClassGrid" Margin="6"/>
                                     </ScrollViewer>
                                 </Grid>
                             </Border>
@@ -1330,14 +1330,14 @@
                     </Grid>
 
                     <!-- MANUEL DAĞITIM (ELLE PROGRAMLAMA) PANELİ -->
-                    <Grid x:Name="ManualDistributionPanel" Visibility="Collapsed" Margin="10">
+                    <Grid x:Name="ManualDistributionPanel" Visibility="Collapsed" Margin="6">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="280"/>
+                            <ColumnDefinition Width="240"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <!-- SOL PANEL -->
-                        <Grid Grid.Column="0" Margin="0,0,10,0">
+                        <Grid Grid.Column="0" Margin="0,0,6,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -1345,10 +1345,10 @@
                             </Grid.RowDefinitions>
 
                             <!-- 1. Öğretmen Seçimi -->
-                            <Border Grid.Row="0" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="10" Margin="0,0,0,10">
+                            <Border Grid.Row="0" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="8" Margin="0,0,0,6">
                                 <StackPanel>
                                     <TextBlock Text="Öğretmen Seçimi" FontWeight="Bold" Margin="0,0,0,5"/>
-                                    <ComboBox x:Name="ComboManualTeacher" Height="30" 
+                                    <ComboBox x:Name="ComboManualTeacher" Height="26" 
                                               DisplayMemberPath="DisplayName" 
                                               SelectionChanged="ComboManualTeacher_SelectionChanged"
                                               Padding="5,0"/>
@@ -1356,7 +1356,7 @@
                             </Border>
 
                             <!-- 2. Bilgi Paneli -->
-                            <Border Grid.Row="1" Background="#ECFEFF" BorderBrush="#A5F3FC" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="10" Margin="0,0,0,10">
+                            <Border Grid.Row="1" Background="#ECFEFF" BorderBrush="#A5F3FC" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="8" Margin="0,0,0,6">
                                 <StackPanel>
                                     <TextBlock Text="İstatistikler" FontWeight="Bold" Foreground="#0891B2" Margin="0,0,0,5"/>
                                     <Grid Margin="0,2">
@@ -1375,7 +1375,7 @@
                             </Border>
 
                             <!-- 3. Dağıtım Blokları Listesi -->
-                            <Border Grid.Row="2" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="10">
+                            <Border Grid.Row="2" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="8">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -1386,8 +1386,8 @@
                                         <ItemsControl x:Name="ListManualBlocks">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="4" Margin="0,0,0,5" Cursor="Hand"
-                                                            Padding="8"
+                                                    <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="4" Margin="0,0,0,3" Cursor="Hand"
+                                                            Padding="6"
                                                             MouseMove="ManualBlock_MouseMove"
                                                             PreviewMouseLeftButtonDown="ManualBlock_PreviewMouseLeftButtonDown">
                                                         <Grid>
@@ -1413,15 +1413,15 @@
                         </Grid>
 
                         <!-- SAĞ PANEL: Ders Programı -->
-                        <Border Grid.Column="1" Background="White" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="15">
+                        <Border Grid.Column="1" Background="White" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="8">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBlock Text="Program Tablosu" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                    <TextBlock Text="Program Tablosu" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
                                     <TextBlock Text="(Sürükleyip Bırakın)" FontSize="12" Foreground="Gray" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                     
                                     <Button x:Name="BtnSaveManual" Content="💾 Değişiklikleri Kaydet" Click="BtnSaveManual_Click" 
@@ -1447,16 +1447,16 @@
                         </Grid.RowDefinitions>
                         
                         <!-- Header -->
-                        <DockPanel Grid.Row="0" Margin="0,0,0,15">
+                        <DockPanel Grid.Row="0" Margin="0,0,0,8">
                             <StackPanel DockPanel.Dock="Left">
-                                <TextBlock Text="Sınıf Müfredat ve Atama" FontSize="24" FontWeight="Bold"/>
+                                <TextBlock Text="Sınıf Müfredat ve Atama" FontSize="20" FontWeight="Bold"/>
                                 <TextBlock Text="Sınıflara ders ekleyin ve öğretmen atayın" Foreground="Gray"/>
                             </StackPanel>
                             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
                                 <Button Content="👨‍🏫 Öğretmen Bazlı Atama" Click="OpenTeacherAssignment_Click"
-                                        VerticalAlignment="Center" Padding="15,8" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0"/>
+                                        VerticalAlignment="Center" Padding="10,6" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0"/>
                                 <Button Content="🔗 Dersleri Birleştir (Kardeş Dersler)" Click="OpenCombinedLessons_Click"
-                                        VerticalAlignment="Center" Padding="15,8" Style="{StaticResource TealButton}" />
+                                        VerticalAlignment="Center" Padding="10,6" Style="{StaticResource TealButton}" />
                             </StackPanel>
                         </DockPanel>
                         
@@ -1468,9 +1468,9 @@
                                 </Grid.ColumnDefinitions>
                                 
                                 <!-- Column 1: Sınıf Listesi (Sidebar) -->
-                                <Border Grid.Column="0" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="12" Margin="0,0,16,0" CornerRadius="{StaticResource CardCornerRadius}">
+                                <Border Grid.Column="0" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8" Margin="0,0,10,0" CornerRadius="{StaticResource CardCornerRadius}">
                                     <DockPanel>
-                                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,6">
                                             <TextBlock Text="🏫 Sınıflar" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
                                             <Button Content="+" Click="AddClass_Click" HorizontalAlignment="Right" Width="22" Height="22" Padding="0" 
                                                     VerticalContentAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="White" 
@@ -1484,7 +1484,7 @@
                                                  Background="Transparent" BorderThickness="0">
                                             <ListBox.ItemContainerStyle>
                                                 <Style TargetType="ListBoxItem">
-                                                    <Setter Property="Padding" Value="12,12"/>
+                                                    <Setter Property="Padding" Value="8,6"/>
                                                     <Setter Property="Margin" Value="0,2"/>
                                                     <Setter Property="Template">
                                                         <Setter.Value>
@@ -1531,9 +1531,9 @@
                                     <TabControl Background="Transparent" BorderThickness="0">
                                         <TabControl.ItemContainerStyle>
                                             <Style TargetType="TabItem">
-                                                <Setter Property="FontSize" Value="14"/>
+                                                <Setter Property="FontSize" Value="13"/>
                                                 <Setter Property="FontWeight" Value="SemiBold"/>
-                                                <Setter Property="Padding" Value="20,10"/>
+                                                <Setter Property="Padding" Value="14,6"/>
                                                 <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
                                                 <Setter Property="Template">
                                                     <Setter.Value>
@@ -1563,14 +1563,14 @@
                                         
                                         <!-- Tab 1: Atamalar -->
                                         <TabItem Header="📖 Müfredat ve Atamalar">
-                                            <Grid Margin="16">
+                                            <Grid Margin="10">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="280"/>
+                                                    <ColumnDefinition Width="260"/>
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
-                                                
+
                                                 <!-- Ders Havuzu -->
-                                                <Border Grid.Column="0" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="12" Margin="0,0,16,0" CornerRadius="8">
+                                                <Border Grid.Column="0" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="8" Margin="0,0,10,0" CornerRadius="8">
                                                     <DockPanel>
                                                         <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
                                                             <TextBlock Text="Ders Havuzu" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
@@ -1609,7 +1609,7 @@
                                                 <!-- Tanımlı Dersler -->
                                                 <Border Grid.Column="1" Background="Transparent" Padding="0">
                                                     <DockPanel>
-                                                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                                                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,6">
                                                             <TextBlock Text="📚 Tanımlı Dersler ve Öğretmenler" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
                                                             <CheckBox x:Name="CheckAutoAssignTeacher" Content="Otomatik Ata" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="True" FontSize="11"/>
                                                         </DockPanel>
@@ -1627,15 +1627,15 @@
                                         
                                         <!-- Tab 2: Zaman Tablosu -->
                                         <TabItem Header="📅 Zaman Tablosu (Kısıtlamalar)">
-                                            <Border x:Name="ClassTimetableArea" Background="Transparent" Padding="16">
+                                            <Border x:Name="ClassTimetableArea" Background="Transparent" Padding="10">
                                                 <StackPanel>
-                                                    <DockPanel Margin="0,0,0,16">
+                                                    <DockPanel Margin="0,0,0,8">
                                                         <TextBlock Text="Sınıfın Ders Görebileceği Saatler" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
                                                         <CheckBox x:Name="CheckClassHideWeekend" Content="Haftasonunu Gizle" IsChecked="False" 
                                                                   HorizontalAlignment="Right" VerticalContentAlignment="Center"
                                                                   Click="CheckClassHideWeekend_Click" FontSize="12"/>
                                                     </DockPanel>
-                                                    <Border Background="{DynamicResource SurfaceAltBrush}" Padding="15" CornerRadius="8" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                                    <Border Background="{DynamicResource SurfaceAltBrush}" Padding="10" CornerRadius="8" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
                                                         <StackPanel x:Name="ClassTimetableGrid"/>
                                                     </Border>
                                                     <TextBlock Text="💡 İpucu: Hücrelere çift tıklayarak ders saatlerini kapatabilir veya açabilirsiniz." 
@@ -1687,6 +1687,16 @@
                                         </Button.Resources>
                                     </Button>
                                     <Button Content="Excel'e Aktar" Click="ExportEkDers_Click" Padding="10,5"/>
+                                    <Button Content="📋 İcmal Çizelgesi" Click="ExportIcmal_Click" Padding="10,5" Margin="5,0,0,0" Background="#EFF6FF" Foreground="#1D4ED8" FontWeight="SemiBold">
+                                        <Button.Resources>
+                                            <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
+                                        </Button.Resources>
+                                    </Button>
+                                    <Button Content="📊 Ayrıntı Çizelgesi" Click="ExportAyrinti_Click" Padding="10,5" Margin="5,0,0,0" Background="#F0FDF4" Foreground="#15803D" FontWeight="SemiBold">
+                                        <Button.Resources>
+                                            <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
+                                        </Button.Resources>
+                                    </Button>
                                 </StackPanel>
                             </DockPanel>
                         </Border>
@@ -1722,13 +1732,13 @@
                         </Grid.RowDefinitions>
                         
                         <!-- Header -->
-                        <TextBlock Text="Rapor İşlemleri" FontSize="28" FontWeight="Bold" 
-                                   HorizontalAlignment="Center" Margin="0,0,0,40" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        <TextBlock Text="Rapor İşlemleri" FontSize="22" FontWeight="Bold"
+                                   HorizontalAlignment="Center" Margin="0,0,0,16" Foreground="{DynamicResource TextPrimaryBrush}"/>
                         
                         <!-- Filter Bar -->
-                        <Border Grid.Row="1" Style="{StaticResource CardBorder}" Padding="20" Margin="0,0,0,40">
+                        <Border Grid.Row="1" Style="{StaticResource CardBorder}" Padding="12" Margin="0,0,0,16">
                             <StackPanel Orientation="Horizontal">
-                                <StackPanel Margin="0,0,30,0">
+                                <StackPanel Margin="0,0,16,0">
                                     <TextBlock Text="Evrak Kayıt No" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
                                     <TextBox x:Name="ReportDocumentNo" Width="200"/>
                                 </StackPanel>
@@ -1741,39 +1751,39 @@
                         
                         <!-- Content -->
                         <ScrollViewer x:Name="ReportsScrollViewer" Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                            <StackPanel Margin="0,0,0,40">
+                            <StackPanel Margin="0,0,0,16">
                                 
                                 <!-- Section 1: Ders Programları -->
-                                <TextBlock Text="Ders Programları" FontSize="18" FontWeight="SemiBold" Foreground="#374151" Margin="0,0,0,20"/>
+                                <TextBlock Text="Ders Programları" FontSize="15" FontWeight="SemiBold" Foreground="#374151" Margin="0,0,0,10"/>
                                 
-                                <Grid Margin="0,0,0,30">
+                                <Grid Margin="0,0,0,14">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="10"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/> <!-- Row 0: Programlar 1-2 -->
-                                        <RowDefinition Height="20"/>   <!-- Row 1: Spacer -->
+                                        <RowDefinition Height="10"/>   <!-- Row 1: Spacer -->
                                         <RowDefinition Height="Auto"/> <!-- Row 2: Programlar 3-4 -->
-                                        <RowDefinition Height="20"/>   <!-- Row 3: Spacer -->
+                                        <RowDefinition Height="10"/>   <!-- Row 3: Spacer -->
                                         <RowDefinition Height="Auto"/> <!-- Row 4: Programlar 5 (e-Okul) -->
                                     </Grid.RowDefinitions>
                                     
                                     <!-- Card 1: Öğretmen Programı -->
-                                    <Button Grid.Row="0" Grid.Column="0" Click="Report_TeacherSchedule_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="0" Grid.Column="0" Click="Report_TeacherSchedule_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,15,0">
-                                                            <TextBlock Text="📇" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,10,0">
+                                                            <TextBlock Text="📇" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Öğretmen Programı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Haftalık dağılım" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Öğretmen Programı" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Haftalık dağılım" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -1783,19 +1793,19 @@
                                     </Button>
                                     
                                     <!-- Card 2: Sınıf Programı -->
-                                    <Button Grid.Row="0" Grid.Column="2" Click="Report_ClassSchedule_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="0" Grid.Column="2" Click="Report_ClassSchedule_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource SuccessLightBrush}" Margin="0,0,15,0">
-                                                            <TextBlock Text="🏫" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource SuccessBrush}"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="{DynamicResource SuccessLightBrush}" Margin="0,0,10,0">
+                                                            <TextBlock Text="🏫" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource SuccessBrush}"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Sınıf Programı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Haftalık dağılım" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Sınıf Programı" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Haftalık dağılım" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -1805,19 +1815,19 @@
                                     </Button>
                                     
                                     <!-- Card 3: Öğrt. Günlük Çarşaf -->
-                                    <Button Grid.Row="2" Grid.Column="0" Click="Report_TeacherDaily_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="2" Grid.Column="0" Click="Report_TeacherDaily_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource WarningLightBrush}" Margin="0,0,15,0">
-                                                            <TextBlock Text="📄" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource WarningBrush}"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="{DynamicResource WarningLightBrush}" Margin="0,0,10,0">
+                                                            <TextBlock Text="📄" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource WarningBrush}"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Öğretmen Çarşaf Programı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Günlük toplu liste" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Öğretmen Çarşaf Programı" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Günlük toplu liste" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -1827,19 +1837,19 @@
                                     </Button>
                                     
                                     <!-- Card 4: Sınıf Günlük Çarşaf -->
-                                    <Button Grid.Row="2" Grid.Column="2" Click="Report_ClassDaily_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="2" Grid.Column="2" Click="Report_ClassDaily_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="#FAF5FF" Margin="0,0,15,0">
-                                                            <TextBlock Text="📑" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#A855F7"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="#FAF5FF" Margin="0,0,10,0">
+                                                            <TextBlock Text="📑" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#A855F7"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Sınıf Çarşaf Programı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Günlük toplu liste" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Sınıf Çarşaf Programı" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Günlük toplu liste" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -1852,16 +1862,16 @@
                                     <Button Grid.Row="4" Grid.Column="2" Click="Report_EOkulExport_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100" Margin="0">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="#ECFDF5" Margin="0,0,15,0">
-                                                            <TextBlock Text="📤" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#10B981"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="#ECFDF5" Margin="0,0,10,0">
+                                                            <TextBlock Text="📤" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#10B981"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="e-Okul Aktarım Dosyası" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Dersleri e-Okula yüklemek için dosya hazırla" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="e-Okul Aktarım Dosyası" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Dersleri e-Okula yüklemek için dosya hazırla" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -1874,16 +1884,16 @@
                                     <Button Grid.Row="4" Grid.Column="0" Click="Report_TeacherDailySheet_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100" Margin="0">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="#EFF6FF" Margin="0,0,15,0">
-                                                            <TextBlock Text="📅" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#3B82F6"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="#EFF6FF" Margin="0,0,10,0">
+                                                            <TextBlock Text="📅" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#3B82F6"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Öğretmen Günlük Çarşaf" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Her gün için ayrı liste" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Öğretmen Günlük Çarşaf" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Her gün için ayrı liste" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -1894,38 +1904,38 @@
                                 </Grid>
                                 
                                 <!-- Section 2: Listeler ve Çizelgeler -->
-                                <TextBlock Text="Listeler ve Çizelgeler" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,20"/>
+                                <TextBlock Text="Listeler ve Çizelgeler" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
                                 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="10"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="10"/>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="10"/>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="10"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    
+
                                     <!-- Nöbet Çizelgesi -->
-                                    <Button Grid.Row="0" Grid.Column="0" Click="Report_DutyList_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="0" Grid.Column="0" Click="Report_DutyList_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource ErrorLightBrush}" Margin="0,0,15,0">
-                                                            <TextBlock Text="🛡️" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ErrorBrush}"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="{DynamicResource ErrorLightBrush}" Margin="0,0,10,0">
+                                                            <TextBlock Text="🛡️" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ErrorBrush}"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Nöbet Çizelgesi" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Günlük nöbet yerleri" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Nöbet Çizelgesi" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Günlük nöbet yerleri" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -1935,19 +1945,19 @@
                                     </Button>
                                     
                                     <!-- Rehber Öğretmenler -->
-                                    <Button Grid.Row="0" Grid.Column="2" Click="Report_Guidance_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="0" Grid.Column="2" Click="Report_Guidance_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,15,0">
-                                                            <TextBlock Text="🔍" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,10,0">
+                                                            <TextBlock Text="🔍" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Rehber Öğretmenler" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Sınıf rehber listesi" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Rehber Öğretmenler" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Sınıf rehber listesi" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -1957,19 +1967,19 @@
                                     </Button>
                                     
                                     <!-- Eğitsel Kulüpler -->
-                                    <Button Grid.Row="2" Grid.Column="0" Click="Report_Clubs_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="2" Grid.Column="0" Click="Report_Clubs_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,15,0">
-                                                            <TextBlock Text="🎵" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,10,0">
+                                                            <TextBlock Text="🎵" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Eğitsel Kulüpler" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Öğretmen kulüp listesi" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Eğitsel Kulüpler" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Öğretmen kulüp listesi" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -1979,19 +1989,19 @@
                                     </Button>
                                     
                                     <!-- Ders Atama Listesi -->
-                                    <Button Grid.Row="2" Grid.Column="2" Click="Report_Assignments_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="2" Grid.Column="2" Click="Report_Assignments_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource WarningLightBrush}" Margin="0,0,15,0">
-                                                            <TextBlock Text="📄" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource WarningBrush}"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="{DynamicResource WarningLightBrush}" Margin="0,0,10,0">
+                                                            <TextBlock Text="📄" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource WarningBrush}"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Ders Atama Listesi" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Öğretmen-Ders-Saat" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Ders Atama Listesi" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Öğretmen-Ders-Saat" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -2001,19 +2011,19 @@
                                     </Button>
                                     
                                     <!-- Atanmamış Dersler -->
-                                    <Button Grid.Row="4" Grid.Column="0" Click="Report_Unassigned_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="4" Grid.Column="0" Click="Report_Unassigned_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource ErrorLightBrush}" Margin="0,0,15,0">
-                                                            <TextBlock Text="⚠️" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ErrorBrush}"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="{DynamicResource ErrorLightBrush}" Margin="0,0,10,0">
+                                                            <TextBlock Text="⚠️" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ErrorBrush}"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Atanmamış Dersler" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Öğretmensiz dersler" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Atanmamış Dersler" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Öğretmensiz dersler" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -2023,19 +2033,19 @@
                                     </Button>
                                     
                                     <!-- Seçmeli/Zorunlu Oranı -->
-                                    <Button Grid.Row="4" Grid.Column="2" Click="Report_ElectiveRatio_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="4" Grid.Column="2" Click="Report_ElectiveRatio_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,15,0">
-                                                            <TextBlock Text="📊" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,10,0">
+                                                            <TextBlock Text="📊" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Seçmeli/Zorunlu Oranı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Ders türü dağılımı" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Seçmeli/Zorunlu Oranı" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Ders türü dağılımı" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -2045,19 +2055,19 @@
                                     </Button>
                                     
                                     <!-- Ortak Mekan Programı -->
-                                    <Button Grid.Row="6" Grid.Column="0" Click="Report_RoomSchedule_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="6" Grid.Column="0" Click="Report_RoomSchedule_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource InfoLightBrush}" Margin="0,0,15,0">
-                                                            <TextBlock Text="🏫" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource InfoBrush}"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="{DynamicResource InfoLightBrush}" Margin="0,0,10,0">
+                                                            <TextBlock Text="🏫" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource InfoBrush}"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Ortak Mekan Programı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Laboratuvar vb. programları" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Ortak Mekan Programı" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Laboratuvar vb. programları" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
@@ -2067,19 +2077,19 @@
                                     </Button>
                                     
                                     <!-- Birlikte Derse Girenler -->
-                                    <Button Grid.Row="6" Grid.Column="2" Click="Report_JointTeachers_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                    <Button Grid.Row="6" Grid.Column="2" Click="Report_JointTeachers_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="80">
                                          <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="12" Cursor="Hand">
                                                     <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="#F0F9FF" Margin="0,0,15,0">
-                                                            <TextBlock Text="👥" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0284C7"/>
+                                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Background="#F0F9FF" Margin="0,0,10,0">
+                                                            <TextBlock Text="👥" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0284C7"/>
                                                         </Border>
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <TextBlock Text="Ortak Ders Öğretmenleri" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                            <TextBlock Text="Birlikte derse girenler" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                            <TextBlock Text="Ortak Ders Öğretmenleri" FontWeight="Bold" FontSize="14" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Birlikte derse girenler" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                                         </StackPanel>
                                                         <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
                                                     </Grid>

@@ -1,5 +1,49 @@
-# Ignore everything
-*
+# ===== .NET / Visual Studio =====
+bin/
+obj/
+publish/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+.vs/
+*.nupkg
+*.snupkg
 
-# Only track .gitignore itself
-!.gitignore
+# ===== Build Outputs =====
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+
+# ===== Database Files =====
+*.sqlite
+*.sqlite3
+*.db
+data/
+
+# ===== Release / Package =====
+*.zip
+*.rar
+*.7z
+*.msi
+*.msix
+
+# ===== IDE / Editor =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ===== Claude Code =====
+.claude/
+
+# ===== OS Files =====
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# ===== Misc =====
+test.txt

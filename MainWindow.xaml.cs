@@ -4323,8 +4323,418 @@ public partial class MainWindow : Window
             MessageBox.Show($"Dışa aktarma hatası: {ex.Message}", "HATA");
         }
     }
-    
 
+    // ==================== İCMAL ÇİZELGESİ (KONTROL 1 formatı) ====================
+    private void ExportIcmal_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            int year = (int?)EkDersYearCombo.SelectedItem ?? DateTime.Now.Year;
+            int month = EkDersMonthCombo.SelectedIndex + 1;
+            if (month < 1) { MessageBox.Show("Lütfen bir ay seçin.", "Uyarı"); return; }
+
+            string[] aylar = { "OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK" };
+
+            var saveDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "Excel Dosyası (*.xlsx)|*.xlsx",
+                FileName = $"EkDers_Icmal_{aylar[month - 1]}_{year}.xlsx"
+            };
+            if (saveDialog.ShowDialog() != true) return;
+
+            var teacherRepo = new TeacherRepository();
+            var ekDersRepo = new EkDersMonthlyRepository();
+            var teachers = teacherRepo.GetAll().Where(t => t.HasExtraLessons).OrderBy(t => t.Name).ToList();
+
+            using var workbook = new ClosedXML.Excel.XLWorkbook();
+            var ws = workbook.Worksheets.Add("İcmal");
+
+            // ---- Başlık ----
+            ws.Cell(1, 1).Value = "EKDERS ÜCRET İCMAL ÇİZELGESİ";
+            ws.Range(1, 1, 1, 16).Merge().Style.Font.SetBold(true).Font.SetFontSize(14).Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+
+            ws.Cell(2, 1).Value = $"OKULU VEYA KURUMU: {_schoolInfo?.Name ?? ""}";
+            ws.Range(2, 1, 2, 8).Merge();
+            ws.Cell(2, 9).Value = $"AYI: {aylar[month - 1]}";
+            ws.Range(2, 9, 2, 12).Merge();
+            ws.Cell(2, 13).Value = $"YILI: {year}";
+            ws.Range(2, 13, 2, 16).Merge();
+
+            // ---- Kolon Başlıkları ----
+            int headerRow = 4;
+            string[] headers = { "SIRA", "ADI", "SOYADI", "GÖREVİ",
+                "NORMAL\nGÜNDÜZ", "DYK\nGÜNDÜZ", "DYK\nGECE", "DESTEK\nODASI %25",
+                "SINAV", "HALK EĞİTİM\nGÜNDÜZ", "HALK EĞİTİM\nGECE", "MESLEKİ\nÇALIŞMA",
+                "İŞLETMELERDE\nBECERİ EĞT.", "ATÖLYE\nŞEFLİĞİ", "BELLETMENLİK", "DERS DIŞI\nEGZERSİZ",
+                "NÖBET", "TOPLAM" };
+
+            for (int c = 0; c < headers.Length; c++)
+            {
+                var cell = ws.Cell(headerRow, c + 1);
+                cell.Value = headers[c];
+                cell.Style.Font.SetBold(true).Font.SetFontSize(9)
+                    .Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center)
+                    .Alignment.SetVertical(ClosedXML.Excel.XLAlignmentVerticalValues.Center)
+                    .Alignment.SetWrapText(true);
+                cell.Style.Fill.SetBackgroundColor(ClosedXML.Excel.XLColor.FromHtml("#D9E2F3"));
+                cell.Style.Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
+            }
+            ws.Row(headerRow).Height = 40;
+
+            // ---- Veri Satırları ----
+            int row = headerRow + 1;
+            int[] colTotals = new int[18];
+
+            for (int idx = 0; idx < teachers.Count; idx++)
+            {
+                var t = teachers[idx];
+                var data = ekDersRepo.Load(t.Id, year, month);
+
+                int SumType(params string[] codes) { int s = 0; foreach (var c in codes) if (data.ContainsKey(c)) foreach (var v in data[c].Values) s += v; return s; }
+
+                int normal = SumType("101");
+                int dykGunduz = SumType("110", "112");
+                int dykGece = SumType("111", "113");
+                int destek = SumType("103", "104");
+                int sinav = SumType("107");
+                int heGunduz = SumType("116");
+                int heGece = SumType("117");
+                int mesleki = SumType("109");
+                int isletme = SumType("114");
+                int atolye = SumType("115");
+                int belletmen = SumType("106", "118");
+                int egzersiz = SumType("108");
+                int nobet = SumType("119");
+                int toplam = normal + dykGunduz + dykGece + destek + sinav + heGunduz + heGece + mesleki + isletme + atolye + belletmen + egzersiz + nobet;
+
+                // Ad Soyad ayır
+                string[] nameParts = t.Name.Split(' ', 2);
+                string ad = nameParts.Length > 0 ? nameParts[0] : "";
+                string soyad = nameParts.Length > 1 ? nameParts[1] : "";
+
+                object[] vals = { idx + 1, ad, soyad, t.Position, normal, dykGunduz, dykGece, destek, sinav, heGunduz, heGece, mesleki, isletme, atolye, belletmen, egzersiz, nobet, toplam };
+
+                for (int c = 0; c < vals.Length; c++)
+                {
+                    var cell = ws.Cell(row, c + 1);
+                    if (vals[c] is int intVal)
+                    {
+                        if (intVal > 0) cell.Value = intVal;
+                        colTotals[c] += intVal;
+                    }
+                    else cell.Value = vals[c]?.ToString() ?? "";
+
+                    cell.Style.Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
+                    cell.Style.Alignment.SetHorizontal(c < 4 ? ClosedXML.Excel.XLAlignmentHorizontalValues.Left : ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+                    cell.Style.Font.SetFontSize(10);
+                }
+
+                if (idx % 2 == 1) ws.Range(row, 1, row, 18).Style.Fill.SetBackgroundColor(ClosedXML.Excel.XLColor.FromHtml("#F2F2F2"));
+                row++;
+            }
+
+            // ---- Toplam Satırı ----
+            ws.Cell(row, 1).Value = "TOPLAM";
+            ws.Range(row, 1, row, 4).Merge().Style.Font.SetBold(true).Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+            for (int c = 4; c < 18; c++)
+            {
+                var cell = ws.Cell(row, c + 1);
+                if (colTotals[c] > 0) cell.Value = colTotals[c];
+                cell.Style.Font.SetBold(true).Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+                cell.Style.Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
+            }
+            ws.Range(row, 1, row, 18).Style.Fill.SetBackgroundColor(ClosedXML.Excel.XLColor.FromHtml("#BDD7EE"));
+            for (int c = 1; c <= 4; c++) ws.Cell(row, c).Style.Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
+
+            // ---- İmza Alanları ----
+            row += 2;
+            ws.Cell(row, 1).Value = "Düzenleyen";
+            ws.Cell(row, 1).Style.Font.SetBold(true);
+            ws.Cell(row, 10).Value = "Okul Müdürü";
+            ws.Cell(row, 10).Style.Font.SetBold(true);
+            row++;
+            ws.Cell(row, 10).Value = _schoolInfo?.Principal ?? "";
+
+            // ---- Sütun Genişlikleri ----
+            ws.Column(1).Width = 5;   // Sıra
+            ws.Column(2).Width = 12;  // Adı
+            ws.Column(3).Width = 14;  // Soyadı
+            ws.Column(4).Width = 14;  // Görevi
+            for (int c = 5; c <= 18; c++) ws.Column(c).Width = 10;
+
+            workbook.SaveAs(saveDialog.FileName);
+            MessageBox.Show("İcmal Çizelgesi başarıyla oluşturuldu.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"İcmal dışa aktarma hatası: {ex.Message}", "HATA");
+        }
+    }
+
+    // ==================== AYRINTI ÇİZELGESİ (KONTROL AYRINTI 2 formatı) ====================
+    private void ExportAyrinti_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            int year = (int?)EkDersYearCombo.SelectedItem ?? DateTime.Now.Year;
+            int month = EkDersMonthCombo.SelectedIndex + 1;
+            if (month < 1) { MessageBox.Show("Lütfen bir ay seçin.", "Uyarı"); return; }
+
+            string[] aylar = { "OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK" };
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+
+            var saveDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "Excel Dosyası (*.xlsx)|*.xlsx",
+                FileName = $"EkDers_Ayrinti_{aylar[month - 1]}_{year}.xlsx"
+            };
+            if (saveDialog.ShowDialog() != true) return;
+
+            var teacherRepo = new TeacherRepository();
+            var ekDersRepo = new EkDersMonthlyRepository();
+            var teachers = teacherRepo.GetAll().Where(t => t.HasExtraLessons).OrderBy(t => t.Name).ToList();
+
+            // Haftaları hesapla
+            var weeks = new List<(int start, int end)>();
+            int weekStart = 1;
+            for (int d = 1; d <= daysInMonth; d++)
+            {
+                var dt = new DateTime(year, month, d);
+                bool isLastDay = d == daysInMonth;
+                bool isSunday = dt.DayOfWeek == DayOfWeek.Sunday;
+                if (isSunday || isLastDay)
+                {
+                    weeks.Add((weekStart, d));
+                    weekStart = d + 1;
+                }
+            }
+
+            using var workbook = new ClosedXML.Excel.XLWorkbook();
+            var ws = workbook.Worksheets.Add("Ayrıntı");
+
+            string[] gunKisa = { "Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt" };
+
+            // ---- Başlık ----
+            ws.Cell(1, 1).Value = "EK DERS ÜCRET ÇİZELGESİ";
+            ws.Range(1, 1, 1, 10).Merge().Style.Font.SetBold(true).Font.SetFontSize(14).Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+            ws.Cell(2, 1).Value = $"{_schoolInfo?.Name ?? ""}";
+            ws.Range(2, 1, 2, 5).Merge().Style.Font.SetBold(true);
+            ws.Cell(2, 6).Value = $"İLGİLİ AY: {aylar[month - 1]} {year}";
+            ws.Range(2, 6, 2, 10).Merge();
+
+            // ---- Hafta Başlıkları (Kolon yapısı) ----
+            // Kolonlar: SIRA | SOYADI | KARŞILIĞI | [Hafta1 günleri...] | [Hafta1 Özet] | [Hafta2 günleri...] | ...  | GENEL TOPLAM
+            // Her hafta için: her gün kolonu + özet kolonları
+
+            // Özet satır başlıkları (her hafta için)
+            string[] ozetBasliklari = { "Toplam Ders", "Ücret Karşılığı", "Öğrenci Kişi", "Mesleki Çalışma",
+                "İşletmelerde", "Atölye Şefliği", "Des. ve Yet.", "Belletmenlik",
+                "Hazırlık Plan.", "Ders Dışı Egz.", "Nöbet Ücreti", "Halk Eğitim", "Destek Odası" };
+
+            int headerRow = 4;
+            int col = 1;
+
+            // Sabit kolonlar
+            ws.Cell(headerRow, col).Value = "SIRA"; col++;
+            ws.Cell(headerRow, col).Value = "SOYADI"; col++;
+            ws.Cell(headerRow, col).Value = "KARŞILIĞI"; col++;
+
+            // Her hafta için gün + özet kolonları
+            var weekColStarts = new List<int>();
+            var weekOzetStarts = new List<int>();
+            for (int w = 0; w < weeks.Count; w++)
+            {
+                var (wStart, wEnd) = weeks[w];
+                weekColStarts.Add(col);
+
+                // Gün kolonları
+                for (int d = wStart; d <= wEnd; d++)
+                {
+                    var dt = new DateTime(year, month, d);
+                    ws.Cell(headerRow - 1, col).Value = d.ToString();
+                    ws.Cell(headerRow, col).Value = gunKisa[(int)dt.DayOfWeek];
+                    var hdrCell = ws.Cell(headerRow, col);
+                    if (dt.DayOfWeek == DayOfWeek.Saturday || dt.DayOfWeek == DayOfWeek.Sunday)
+                        hdrCell.Style.Font.SetFontColor(ClosedXML.Excel.XLColor.Red);
+                    col++;
+                }
+
+                // Özet kolonları
+                weekOzetStarts.Add(col);
+                foreach (var ob in ozetBasliklari)
+                {
+                    ws.Cell(headerRow, col).Value = ob;
+                    ws.Cell(headerRow, col).Style.Font.SetFontSize(7).Alignment.SetTextRotation(90).Alignment.SetWrapText(true);
+                    col++;
+                }
+            }
+
+            // Son kolon: GENEL TOPLAM
+            int genelToplamCol = col;
+            ws.Cell(headerRow, col).Value = "GENEL\nTOPLAM";
+
+            // Header satırı formatla
+            int totalCols = col;
+            for (int c = 1; c <= totalCols; c++)
+            {
+                ws.Cell(headerRow, c).Style.Font.SetBold(true).Font.SetFontSize(8)
+                    .Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center)
+                    .Alignment.SetVertical(ClosedXML.Excel.XLAlignmentVerticalValues.Center);
+                ws.Cell(headerRow, c).Style.Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
+                ws.Cell(headerRow, c).Style.Fill.SetBackgroundColor(ClosedXML.Excel.XLColor.FromHtml("#D9E2F3"));
+            }
+            ws.Row(headerRow).Height = 45;
+
+            // Hafta üst başlıkları
+            for (int w = 0; w < weeks.Count; w++)
+            {
+                int startC = weekColStarts[w];
+                int endC = weekOzetStarts[w] + ozetBasliklari.Length - 1;
+                ws.Cell(headerRow - 2, startC).Value = $"{w + 1}.HAFTA (TOPLAM DERS SAATLERİ)";
+                ws.Range(headerRow - 2, startC, headerRow - 2, endC).Merge().Style.Font.SetBold(true).Font.SetFontSize(8)
+                    .Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+            }
+
+            // ---- Veri Satırları ----
+            int row = headerRow + 1;
+            int genelToplam = 0;
+
+            foreach (var t in teachers)
+            {
+                var data = ekDersRepo.Load(t.Id, year, month);
+                int SumType(string[] codes, int day) { int s = 0; foreach (var c in codes) if (data.ContainsKey(c) && data[c].ContainsKey(day)) s += data[c][day]; return s; }
+                int SumTypeAll(params string[] codes) { int s = 0; foreach (var c in codes) if (data.ContainsKey(c)) foreach (var v in data[c].Values) s += v; return s; }
+
+                string[] nameParts = t.Name.Split(' ', 2);
+                string soyad = nameParts.Length > 1 ? nameParts[1] : nameParts[0];
+
+                col = 1;
+                ws.Cell(row, col++).Value = teachers.IndexOf(t) + 1;
+                ws.Cell(row, col++).Value = soyad;
+                ws.Cell(row, col++).Value = t.Position;
+
+                int teacherTotal = 0;
+
+                for (int w = 0; w < weeks.Count; w++)
+                {
+                    var (wStart, wEnd) = weeks[w];
+
+                    int weekNormal = 0;
+                    // Gün değerleri
+                    for (int d = wStart; d <= wEnd; d++)
+                    {
+                        // Tüm ders kodlarının günlük toplamı
+                        int dayTotal = 0;
+                        foreach (var kvp in data)
+                            if (kvp.Value.ContainsKey(d)) dayTotal += kvp.Value[d];
+
+                        if (dayTotal > 0) ws.Cell(row, col).Value = dayTotal;
+                        ws.Cell(row, col).Style.Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+                        ws.Cell(row, col).Style.Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
+                        ws.Cell(row, col).Style.Font.SetFontSize(9);
+
+                        weekNormal += dayTotal;
+                        col++;
+                    }
+
+                    // Haftalık özet kolonları
+                    // Hafta bazında kod toplamları
+                    int wToplamDers = 0, wUcretKarsiligi = 0, wOgrenciKisi = 0, wMesleki = 0;
+                    int wIsletme = 0, wAtolyeSefligi = 0, wDyk = 0, wBelletmen = 0;
+                    int wHazirlik = 0, wDersDisi = 0, wNobet = 0, wHalkEgitim = 0, wDestek = 0;
+
+                    for (int d = wStart; d <= wEnd; d++)
+                    {
+                        wToplamDers += SumType(new[] { "101", "102" }, d);
+                        wUcretKarsiligi += SumType(new[] { "103", "104" }, d);
+                        wMesleki += SumType(new[] { "109" }, d);
+                        wIsletme += SumType(new[] { "114" }, d);
+                        wAtolyeSefligi += SumType(new[] { "115" }, d);
+                        wDyk += SumType(new[] { "110", "111", "112", "113" }, d);
+                        wBelletmen += SumType(new[] { "106", "118" }, d);
+                        wHazirlik += SumType(new[] { "116" }, d);
+                        wDersDisi += SumType(new[] { "108" }, d);
+                        wNobet += SumType(new[] { "119" }, d);
+                        wHalkEgitim += SumType(new[] { "117" }, d);
+                        wDestek += SumType(new[] { "107" }, d);
+                    }
+
+                    int[] ozetVals = { wToplamDers, wUcretKarsiligi, wOgrenciKisi, wMesleki,
+                        wIsletme, wAtolyeSefligi, wDyk, wBelletmen,
+                        wHazirlik, wDersDisi, wNobet, wHalkEgitim, wDestek };
+
+                    for (int oi = 0; oi < ozetVals.Length; oi++)
+                    {
+                        if (ozetVals[oi] > 0) ws.Cell(row, col).Value = ozetVals[oi];
+                        ws.Cell(row, col).Style.Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+                        ws.Cell(row, col).Style.Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
+                        ws.Cell(row, col).Style.Font.SetFontSize(8);
+                        ws.Cell(row, col).Style.Fill.SetBackgroundColor(ClosedXML.Excel.XLColor.FromHtml("#E2EFDA"));
+                        col++;
+                    }
+
+                    teacherTotal += weekNormal;
+                }
+
+                // Genel toplam
+                ws.Cell(row, genelToplamCol).Value = teacherTotal;
+                ws.Cell(row, genelToplamCol).Style.Font.SetBold(true).Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+                ws.Cell(row, genelToplamCol).Style.Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
+                genelToplam += teacherTotal;
+
+                // Satır formatı
+                for (int c = 1; c <= 3; c++)
+                {
+                    ws.Cell(row, c).Style.Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
+                    ws.Cell(row, c).Style.Font.SetFontSize(9);
+                }
+
+                if (teachers.IndexOf(t) % 2 == 1)
+                    ws.Range(row, 1, row, totalCols).Style.Fill.SetBackgroundColor(ClosedXML.Excel.XLColor.FromHtml("#F2F2F2"));
+
+                row++;
+            }
+
+            // ---- Genel Toplam Satırı ----
+            ws.Cell(row, 1).Value = "GENEL TOPLAM";
+            ws.Range(row, 1, row, 3).Merge().Style.Font.SetBold(true).Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+            ws.Cell(row, genelToplamCol).Value = genelToplam;
+            ws.Cell(row, genelToplamCol).Style.Font.SetBold(true).Alignment.SetHorizontal(ClosedXML.Excel.XLAlignmentHorizontalValues.Center);
+            ws.Range(row, 1, row, totalCols).Style.Fill.SetBackgroundColor(ClosedXML.Excel.XLColor.FromHtml("#BDD7EE"))
+                .Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
+
+            // ---- İmza Alanları ----
+            row += 2;
+            ws.Cell(row, 1).Value = "Müdür Yardımcısı";
+            ws.Cell(row, 1).Style.Font.SetBold(true);
+            ws.Cell(row + 1, 1).Value = "Kayıtlarımıza Uygundur";
+            ws.Cell(row, genelToplamCol - 5).Value = "Okul Müdürü";
+            ws.Cell(row, genelToplamCol - 5).Style.Font.SetBold(true);
+            ws.Cell(row + 1, genelToplamCol - 5).Value = _schoolInfo?.Principal ?? "";
+
+            // ---- Sütun Genişlikleri ----
+            ws.Column(1).Width = 4;  // Sıra
+            ws.Column(2).Width = 12; // Soyadı
+            ws.Column(3).Width = 12; // Karşılığı
+            for (int c = 4; c <= totalCols; c++) ws.Column(c).Width = 3.5;
+            ws.Column(genelToplamCol).Width = 6;
+
+            // Özet kolonlarını biraz genişlet
+            for (int w = 0; w < weeks.Count; w++)
+            {
+                int ozetStart = weekOzetStarts[w];
+                for (int oi = 0; oi < ozetBasliklari.Length; oi++)
+                    ws.Column(ozetStart + oi).Width = 4;
+            }
+
+            workbook.SaveAs(saveDialog.FileName);
+            MessageBox.Show("Ayrıntı Çizelgesi başarıyla oluşturuldu.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ayrıntı dışa aktarma hatası: {ex.Message}", "HATA");
+        }
+    }
 
     private void SetupMainEkDersGrid(Teacher teacher, bool reloadData = true)
     {

@@ -106,14 +106,14 @@ public partial class TeacherScheduleEditWindow : Window
         _workingBlocks = _originalBlocks.Select(b => b.Clone()).ToList();
 
         // Öğretmen combo doldur
-        TeacherCombo.ItemsSource = teacherList.OrderBy(t => t.Name).ToList();
+        TeacherListBox.ItemsSource = teacherList.OrderBy(t => t.Name).ToList();
 
         StatusText.Text = "Öğretmen seçip bir bloğa sol tıklayın.";
     }
 
     // ===== ÖĞRETMEN SEÇİMİ =====
 
-    private void TeacherCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void TeacherListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         _selectedBlock = null;
         SelectedBlockInfo.Text = "";
@@ -123,8 +123,8 @@ public partial class TeacherScheduleEditWindow : Window
 
     private int GetCurrentTeacherId()
     {
-        if (TeacherCombo.SelectedValue is int id) return id;
-        if (TeacherCombo.SelectedItem is Teacher t) return t.Id;
+        if (TeacherListBox.SelectedValue is int id) return id;
+        if (TeacherListBox.SelectedItem is Teacher t) return t.Id;
         return 0;
     }
 
@@ -142,7 +142,7 @@ public partial class TeacherScheduleEditWindow : Window
             b.TeacherIds.Contains(teacherId) && b.IsPlaced).ToList();
 
         var mainGrid = new Grid();
-        mainGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(interactive ? 40 : 32) });
+        mainGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(interactive ? 32 : 28) });
         for (int i = 0; i < _maxDays; i++)
             mainGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
@@ -161,7 +161,7 @@ public partial class TeacherScheduleEditWindow : Window
                 {
                     Text = days[i],
                     FontWeight = FontWeights.SemiBold,
-                    FontSize = interactive ? 9.5 : 8,
+                    FontSize = interactive ? 11.5 : 10,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     Foreground = headerFg
                 }
@@ -171,7 +171,7 @@ public partial class TeacherScheduleEditWindow : Window
         }
 
         // Rows
-        int rowHeight = interactive ? 32 : 24;
+        int rowHeight = interactive ? 32 : 26;
         for (int h = 1; h <= _maxHours; h++)
         {
             mainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(rowHeight) });
@@ -183,7 +183,7 @@ public partial class TeacherScheduleEditWindow : Window
                 {
                     Text = h.ToString(),
                     FontWeight = FontWeights.Bold,
-                    FontSize = interactive ? 10 : 8,
+                    FontSize = interactive ? 12 : 10,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
                     Foreground = headerFg
@@ -304,7 +304,7 @@ public partial class TeacherScheduleEditWindow : Window
                 var txt = new TextBlock
                 {
                     Text = displayText,
-                    FontSize = interactive ? 8.5 : 7,
+                    FontSize = interactive ? 10.5 : 9,
                     TextWrapping = TextWrapping.NoWrap,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     Margin = new Thickness(1, 0, 1, 0),
