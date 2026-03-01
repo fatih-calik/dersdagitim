@@ -1,0 +1,2099 @@
+﻿<Window x:Class="DersDagitim.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DersDagitim"
+        xmlns:views="clr-namespace:DersDagitim.Views"
+        Title="Ders Dağıtım" 
+        Icon="/Resources/app.ico"
+        Height="600" Width="900"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
+    
+    <Grid>
+        <!-- License Overlay -->
+        <Grid x:Name="LicenseOverlay" Visibility="Collapsed" Background="{DynamicResource BackgroundBrush}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="400">
+                <TextBlock Text="🔐 Lisans Gerekli" FontSize="24" FontWeight="Bold" 
+                           HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                
+                <TextBlock Text="Lütfen okul adınızı giriniz:" Margin="0,0,0,5"/>
+                <TextBox x:Name="SchoolNameInput" Padding="8" Margin="0,0,0,15"/>
+                
+                <TextBlock Text="İstek Kodu:" Margin="0,0,0,5"/>
+                <TextBox x:Name="RequestCodeBox" IsReadOnly="True" Padding="8" Margin="0,0,0,5"/>
+                <Button x:Name="CopyCodeButton" Content="Kodu Kopyala" Click="CopyCode_Click" 
+                        Padding="10,5" Margin="0,0,0,20"/>
+                
+                <TextBlock Text="Lütfen aktivasyon kodunuzu giriniz:" Margin="0,0,0,5"/>
+                <TextBox x:Name="LicenseCodeInput" Padding="8" Margin="0,0,0,10"/>
+                <Button x:Name="ActivateButton" Content="Lisansı Etkinleştir" Click="Activate_Click"
+                        Padding="10,8" Style="{StaticResource PrimaryButton}"/>
+                
+                <TextBlock x:Name="LicenseStatusText" Foreground="Red" Margin="0,10,0,0" 
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+        
+        <!-- Main Content -->
+        <Grid x:Name="MainContent" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Sidebar - Compact Mode -->
+            <Border Grid.Column="0" Background="{DynamicResource SidebarBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0" Width="64">
+                <Grid Margin="0,24">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Branding (Logo) Removed -->
+                    
+                    <!-- Navigation Items -->
+                    <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                        <StackPanel.Resources>
+                            <Style TargetType="Path">
+                                <Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                <Setter Property="Width" Value="28"/>
+                                <Setter Property="Height" Value="28"/>
+                                <Setter Property="Stretch" Value="Uniform"/>
+                            </Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource SidebarButton}">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="Width" Value="56"/>
+                                <Setter Property="Height" Value="56"/>
+                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </StackPanel.Resources>
+
+                        <Button x:Name="NavBtnDashboard" Click="Nav_Dashboard" Tag="Dashboard" 
+                                ToolTip="Genel Bakış: Kurumun genel durumunu, istatistiklerini ve veritabanı bilgilerini buradan takip edebilirsiniz.">
+                            <Path Data="{StaticResource IconHome}"/>
+                        </Button>
+
+                        <Button x:Name="NavBtnSettings" Click="Nav_Settings" Tag="Settings" 
+                                ToolTip="Okul Ayarları: Okul adı, müdür bilgileri, zaman tablosu ve temel tanımlamaları buradan yönetebilirsiniz.">
+                            <Path Data="{StaticResource IconSettings}"/>
+                        </Button>
+                        
+                        <Button x:Name="NavBtnTeachers" Click="Nav_Teachers" Tag="Teachers" 
+                                ToolTip="Öğretmenler: Öğretmen listesini, nöbet yerlerini ve öğretmen bazlı kısıtlamaları düzenleyebilirsiniz.">
+                            <Path Data="{StaticResource IconTeachers}"/>
+                        </Button>
+
+                        <Button x:Name="NavBtnClasses" Click="Nav_Classes" Tag="Classes" 
+                                ToolTip="Sınıflar: Sınıf listesini, ders kısıtlamalarını ve sınıf bazlı haftalık tabloları yönetebilirsiniz.">
+                            <Path Data="{StaticResource IconClasses}"/>
+                        </Button>
+
+                        <!-- 
+                        <Button x:Name="NavBtnLessons" Click="Nav_Lessons" Tag="Lessons" 
+                                ToolTip="Dersler: Okuldaki tüm ders tanımlarını, ders kodlarını ve renklerini buradan düzenleyebilirsiniz.">
+                            <Path Data="{StaticResource IconLessons}"/>
+                        </Button>
+                        -->
+
+                        <Button x:Name="NavBtnScheduling" Click="Nav_Scheduling" Tag="Scheduling" 
+                                ToolTip="Dağıtım Planlayıcı: Ders programını otomatik olarak dağıtabilirsiniz.">
+                            <Path Data="{StaticResource IconScheduling}"/>
+                        </Button>
+
+
+
+                        <Button x:Name="NavBtnEkDers" Click="Nav_EkDers" Tag="EkDers" 
+                                ToolTip="Ek Ders: Aylık ek ders hesaplamalarını, puantajları ve çarşaf listeleri hazırlayabilirsiniz.">
+                            <Path Data="{StaticResource IconEkDers}"/>
+                        </Button>
+                        
+                         <Button x:Name="NavBtnReports" Click="Nav_Reports" Tag="Reports" 
+                                ToolTip="Rapor İşlemleri: Haftalık programlar, nöbet çizelgeleri ve e-Okul aktarım dosyalarını buradan hazırlayabilirsiniz.">
+                            <Path Data="{StaticResource IconReports}"/>
+                        </Button>
+                    </StackPanel>
+                    
+                     <!-- Bottom Actions -->
+                    <StackPanel Grid.Row="2" HorizontalAlignment="Center">
+                         <StackPanel.Resources>
+                            <Style TargetType="Path">
+                                <Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                <Setter Property="Width" Value="24"/>
+                                <Setter Property="Height" Value="24"/>
+                                <Setter Property="Stretch" Value="Uniform"/>
+                            </Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource SidebarButton}">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="Width" Value="48"/>
+                                <Setter Property="Height" Value="48"/>
+                                <Setter Property="Margin" Value="0,0,0,8"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </StackPanel.Resources>
+
+                    </StackPanel>
+                </Grid>
+            </Border>
+            
+            <!-- Main Panel -->
+            <Border Grid.Column="1" Background="{DynamicResource BackgroundBrush}" Padding="24">
+                <Grid>
+                    <!-- Dashboard View -->
+                    <ScrollViewer x:Name="DashboardPanel" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel>
+                            <!-- Modern Header with Logo -->
+                            <Grid Margin="0,0,0,24">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="64" Height="64" Background="{DynamicResource PrimaryLightBrush}" CornerRadius="16" Margin="0,0,16,0">
+                                    <Image Source="/Resources/app.png" Margin="10" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Border>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Genel Durum" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Ders Dağıtım Planlama Sistemi" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                </StackPanel>
+                            </Grid>
+                        
+                        <!-- Compact Dashboard Stats Grid -->
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Database Card - Updated Style - Clickable -->
+                            <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}" CornerRadius="10" 
+                                    Padding="12" Margin="0,0,10,0" Cursor="Hand" MouseLeftButtonDown="SelectDatabase_Click" MouseRightButtonDown="ValidateDatabase_Click" ToolTip="Sol tık: Değiştir / Sağ tık: Veri Kontrolü">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#000000" BlurRadius="12" ShadowDepth="2" Opacity="0.05"/>
+                                </Border.Effect>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="📁 Veritabanı" Foreground="{DynamicResource TextSecondaryBrush}" 
+                                               FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="DatabaseNameLabel" Text="ders_dagitim" FontSize="14" FontWeight="Bold"
+                                               Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Teacher Count Card - Clickable -->
+                            <Border Grid.Column="1" Background="{DynamicResource SurfaceBrush}" CornerRadius="10" 
+                                    Padding="12" Margin="0,0,10,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_TeachersCard_Click">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#000000" BlurRadius="12" ShadowDepth="2" Opacity="0.05"/>
+                                </Border.Effect>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="👨‍🏫 Öğretmen" Foreground="{DynamicResource TextSecondaryBrush}" 
+                                               FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="TeacherCount" Text="0" FontSize="24" FontWeight="Bold"
+                                               Foreground="{DynamicResource PrimaryBrush}" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Class Count Card - Clickable -->
+                            <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" CornerRadius="10" 
+                                    Padding="12" Margin="0,0,10,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_ClassesCard_Click">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#000000" BlurRadius="12" ShadowDepth="2" Opacity="0.05"/>
+                                </Border.Effect>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="🏫 Sınıflar" Foreground="{DynamicResource TextSecondaryBrush}" 
+                                               FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="ClassCount" Text="0" FontSize="24" FontWeight="Bold"
+                                               Foreground="{DynamicResource PrimaryBrush}" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Lesson Count Card - Clickable -->
+                            <Border Grid.Column="3" Background="{DynamicResource SurfaceBrush}" CornerRadius="10" 
+                                    Padding="12" Margin="0,0,10,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_LessonsCard_Click">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#000000" BlurRadius="12" ShadowDepth="2" Opacity="0.05"/>
+                                </Border.Effect>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="📖 Dersler" Foreground="{DynamicResource TextSecondaryBrush}" 
+                                               FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="LessonCount" Text="0" FontSize="24" FontWeight="Bold"
+                                               Foreground="{DynamicResource PrimaryBrush}" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Placement Card (Green) - Clickable -->
+                            <Border Grid.Column="4" Background="{DynamicResource SuccessLightBrush}" CornerRadius="10" 
+                                    Padding="12" Margin="0,0,10,0" Cursor="Hand" MouseLeftButtonDown="Dashboard_DistributionCard_Click">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#10B981" BlurRadius="12" ShadowDepth="2" Opacity="0.1"/>
+                                </Border.Effect>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="✅ Yerleşim" Foreground="{DynamicResource SuccessBrush}" 
+                                               FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="PlacementPercent" Text="%0" FontSize="24" FontWeight="Bold" 
+                                               Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Gaps Card (Yellow) - Clickable -->
+                            <Border Grid.Column="5" Background="{DynamicResource WarningLightBrush}" CornerRadius="10" 
+                                    Padding="12" Cursor="Hand" MouseLeftButtonDown="Dashboard_DistributionCard_Click">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#F59E0B" BlurRadius="12" ShadowDepth="2" Opacity="0.1"/>
+                                </Border.Effect>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="⚠️ Boşluk" Foreground="{DynamicResource WarningBrush}" 
+                                               FontSize="11" Margin="0,0,0,4" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="TotalGaps" Text="0" FontSize="24" FontWeight="Bold" 
+                                               Foreground="{DynamicResource WarningBrush}" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        
+                        <!-- Günlük Durum ve Nöbetler -->
+                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="15" Margin="0,20,0,0" CornerRadius="{StaticResource CardCornerRadius}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                    <TextBlock Text="📅" FontSize="18" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Haftalık Nöbet Çizelgesi" FontWeight="Bold" FontSize="16"/>
+                                </StackPanel>
+                                
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <!-- Pazartesi -->
+                                    <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,5,0">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="Pazartesi" FontWeight="Bold"/>
+                                                <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="10" Padding="6,2" Margin="8,0,0,0">
+                                                    <TextBlock x:Name="MondayDutyCount" Text="0" Foreground="White" FontSize="11"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,8" Opacity="0.8">
+                                                <TextBlock Text="👤" FontSize="10" Foreground="Gray" Margin="0,0,4,0"/>
+                                                <TextBlock x:Name="MondayActiveCount" Text="0" FontSize="10" FontWeight="Bold" Foreground="Gray"/>
+                                                <TextBlock Text=" öğretmen okula gelecek" FontSize="10" Foreground="Gray" Margin="4,0,0,0"/>
+                                            </StackPanel>
+                                            <Separator Background="#F1F5F9" Margin="0,0,0,8"/>
+                                            <StackPanel x:Name="MondayDutiesPanel"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- Salı -->
+                                    <Border Grid.Column="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,5,0">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="Salı" FontWeight="Bold"/>
+                                                <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="10" Padding="6,2" Margin="8,0,0,0">
+                                                    <TextBlock x:Name="TuesdayDutyCount" Text="0" Foreground="White" FontSize="11"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,8" Opacity="0.8">
+                                                <TextBlock Text="👤" FontSize="10" Foreground="Gray" Margin="0,0,4,0"/>
+                                                <TextBlock x:Name="TuesdayActiveCount" Text="0" FontSize="10" FontWeight="Bold" Foreground="Gray"/>
+                                                <TextBlock Text=" öğretmen okula gelecek" FontSize="10" Foreground="Gray" Margin="4,0,0,0"/>
+                                            </StackPanel>
+                                            <Separator Background="#F1F5F9" Margin="0,0,0,8"/>
+                                            <StackPanel x:Name="TuesdayDutiesPanel"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- Çarşamba -->
+                                    <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,5,0">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="Çarşamba" FontWeight="Bold"/>
+                                                <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="10" Padding="6,2" Margin="8,0,0,0">
+                                                    <TextBlock x:Name="WednesdayDutyCount" Text="0" Foreground="White" FontSize="11"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,8" Opacity="0.8">
+                                                <TextBlock Text="👤" FontSize="10" Foreground="Gray" Margin="0,0,4,0"/>
+                                                <TextBlock x:Name="WednesdayActiveCount" Text="0" FontSize="10" FontWeight="Bold" Foreground="Gray"/>
+                                                <TextBlock Text=" öğretmen okula gelecek" FontSize="10" Foreground="Gray" Margin="4,0,0,0"/>
+                                            </StackPanel>
+                                            <Separator Background="#F1F5F9" Margin="0,0,0,8"/>
+                                            <StackPanel x:Name="WednesdayDutiesPanel"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- Perşembe -->
+                                    <Border Grid.Column="3" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,5,0">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="Perşembe" FontWeight="Bold"/>
+                                                <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="10" Padding="6,2" Margin="8,0,0,0">
+                                                    <TextBlock x:Name="ThursdayDutyCount" Text="0" Foreground="White" FontSize="11"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,8" Opacity="0.8">
+                                                <TextBlock Text="👤" FontSize="10" Foreground="Gray" Margin="0,0,4,0"/>
+                                                <TextBlock x:Name="ThursdayActiveCount" Text="0" FontSize="10" FontWeight="Bold" Foreground="Gray"/>
+                                                <TextBlock Text=" öğretmen okula gelecek" FontSize="10" Foreground="Gray" Margin="4,0,0,0"/>
+                                            </StackPanel>
+                                            <Separator Background="#F1F5F9" Margin="0,0,0,8"/>
+                                            <StackPanel x:Name="ThursdayDutiesPanel"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- Cuma -->
+                                    <Border Grid.Column="4" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="Cuma" FontWeight="Bold"/>
+                                                <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="10" Padding="6,2" Margin="8,0,0,0">
+                                                    <TextBlock x:Name="FridayDutyCount" Text="0" Foreground="White" FontSize="11"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,8" Opacity="0.8">
+                                                <TextBlock Text="👤" FontSize="10" Foreground="Gray" Margin="0,0,4,0"/>
+                                                <TextBlock x:Name="FridayActiveCount" Text="0" FontSize="10" FontWeight="Bold" Foreground="Gray"/>
+                                                <TextBlock Text=" öğretmen okula gelecek" FontSize="10" Foreground="Gray" Margin="4,0,0,0"/>
+                                            </StackPanel>
+                                            <Separator Background="#F1F5F9" Margin="0,0,0,8"/>
+                                            <StackPanel x:Name="FridayDutiesPanel"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- En Çok Boşluğu Olanlar -->
+                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="15" Margin="0,20,0,0" CornerRadius="{StaticResource CardCornerRadius}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                    <TextBlock Text="⚠️" FontSize="18" Margin="0,0,8,0"/>
+                                    <TextBlock Text="En Çok Boşluğu Olanlar" FontWeight="Bold" FontSize="16"/>
+                                </StackPanel>
+                                <StackPanel x:Name="GapTeachersPanel"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <TextBlock x:Name="StatusText" Text="" Foreground="Gray" Margin="0,20,0,0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                    
+                    <!-- Settings View -->
+                    <ScrollViewer x:Name="SettingsPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                        <!-- Header -->
+                        <Grid Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="Okul Ayarları" FontSize="24" FontWeight="Bold"/>
+                                <TextBlock Text="Okul bilgilerini, zaman tablosunu ve tanımları yönetin" Foreground="Gray"/>
+                            </StackPanel>
+                            <Button Content="✓ Ayarları Kaydet" Click="SaveSchoolInfo_Click" 
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Padding="10,6" Style="{StaticResource PrimaryButton}"/>
+                        </Grid>
+                        
+                        <!-- Genel Bilgiler -->
+                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,0,15" CornerRadius="{StaticResource CardCornerRadius}">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                        <TextBlock Text="Okul Adı" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="11"/>
+                                        <TextBox x:Name="SettingsSchoolName" Margin="0,3,0,0" IsReadOnly="True" Background="#F1F5F9" Cursor="No"/>
+                                    </StackPanel>
+                                    
+                                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                        <TextBlock Text="Müdür" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="11"/>
+                                        <TextBox x:Name="SettingsPrincipal" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                    
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Eğitim Dönemi" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="11"/>
+                                        <TextBox x:Name="SettingsStartDate" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- Varsayılan Zaman Tablosu -->
+                        <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,0,15" CornerRadius="{StaticResource CardCornerRadius}">
+                            <StackPanel>
+                                <TextBlock Text="Varsayılan Zaman Tablosu" FontWeight="Bold" Margin="0,0,0,5" FontSize="12"/>
+                                <TextBlock Text="Hücrelere tıklayarak açık/kapalı değiştirin. A=Açık, K=Kapalı" 
+                                           Foreground="Gray" FontSize="10" Margin="0,0,0,10"/>
+                                
+                                <!-- Simple Grid Container - generated in code -->
+                                <StackPanel x:Name="TimetableContainer"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- Eğitsel Kulüpler & Nöbet Yerleri & Binalar & Ortak Mekanlar (Yan Yana) -->
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Eğitsel Kulüpler -->
+                            <Border Grid.Column="0" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" CornerRadius="{StaticResource CardCornerRadius}">
+                                <StackPanel>
+                                    <TextBlock Text="Eğitsel Kulüpler" FontWeight="Bold" Margin="0,0,0,8" FontSize="12"/>
+                                    <Grid Margin="0,0,0,8">
+                                        <TextBox x:Name="NewClubInput" Padding="5" Margin="0,0,30,0" FontSize="11" Height="24" KeyDown="NewClubInput_KeyDown"/>
+                                        <Button Content="+" Click="AddClub_Click" HorizontalAlignment="Right" 
+                                                Width="24" Height="24" Padding="0"/>
+                                    </Grid>
+                                    <ListBox x:Name="ClubsList" Height="120" BorderThickness="0" FontSize="11">
+                                        <ListBox.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Sil" Click="DeleteClub_Click"/>
+                                            </ContextMenu>
+                                        </ListBox.ContextMenu>
+                                    </ListBox>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Nöbet Yerleri -->
+                            <Border Grid.Column="2" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" CornerRadius="{StaticResource CardCornerRadius}">
+                                <StackPanel>
+                                    <TextBlock Text="Nöbet Yerleri" FontWeight="Bold" Margin="0,0,0,8" FontSize="12"/>
+                                    <Grid Margin="0,0,0,8">
+                                        <TextBox x:Name="NewDutyLocationInput" Padding="5" Margin="0,0,30,0" FontSize="11" Height="24" KeyDown="NewDutyLocationInput_KeyDown"/>
+                                        <Button Content="+" Click="AddDutyLocation_Click" HorizontalAlignment="Right" 
+                                                Width="24" Height="24" Padding="0"/>
+                                    </Grid>
+                                    <ListBox x:Name="DutyLocationsList" Height="120" BorderThickness="0" FontSize="11">
+                                        <ListBox.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Sil" Click="DeleteDutyLocation_Click"/>
+                                            </ContextMenu>
+                                        </ListBox.ContextMenu>
+                                    </ListBox>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Binalar / Mekanlar -->
+                            <Border Grid.Column="4" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" CornerRadius="{StaticResource CardCornerRadius}">
+                                <StackPanel>
+                                    <TextBlock Text="Binalar" FontWeight="Bold" Margin="0,0,0,8" FontSize="12"/>
+                                    <Grid Margin="0,0,0,8">
+                                        <TextBox x:Name="NewBuildingInput" Padding="5" Margin="0,0,30,0" FontSize="11" Height="24" KeyDown="NewBuildingInput_KeyDown"/>
+                                        <Button Content="+" Click="AddBuilding_Click" HorizontalAlignment="Right" 
+                                                Width="24" Height="24" Padding="0"/>
+                                    </Grid>
+                                    <ListBox x:Name="BuildingsList" Height="120" BorderThickness="0" FontSize="11">
+                                        <ListBox.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Sil" Click="DeleteBuilding_Click"/>
+                                            </ContextMenu>
+                                        </ListBox.ContextMenu>
+                                    </ListBox>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Ortak Mekanlar -->
+                            <Border Grid.Column="6" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" CornerRadius="{StaticResource CardCornerRadius}">
+                                <StackPanel>
+                                    <TextBlock Text="Ortak Mekanlar" FontWeight="Bold" Margin="0,0,0,8" FontSize="12"/>
+                                    <Grid Margin="0,0,0,8">
+                                        <TextBox x:Name="NewOrtakMekanInput" Padding="5" Margin="0,0,30,0" FontSize="11" Height="24" KeyDown="NewOrtakMekanInput_KeyDown"/>
+                                        <Button Content="+" Click="AddOrtakMekan_Click" HorizontalAlignment="Right" 
+                                                Width="24" Height="24" Padding="0"/>
+                                    </Grid>
+                                    <ListBox x:Name="OrtakMekanList" Height="120" BorderThickness="0" FontSize="11">
+                                        <ListBox.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Sil" Click="DeleteOrtakMekan_Click"/>
+                                            </ContextMenu>
+                                        </ListBox.ContextMenu>
+                                    </ListBox>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        
+                        <!-- Lisans ve Güvenlik (Yan Yana) -->
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Ders Havuzu Paneli (Was Col 6, Now Col 0) -->
+                            <Border Grid.Column="0" Background="{DynamicResource InfoLightBrush}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1" Padding="15" CornerRadius="{StaticResource CardCornerRadius}">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="📚" FontSize="16" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Ders Havuzu" FontWeight="Bold" Foreground="{DynamicResource PrimaryDarkBrush}"/>
+                                    </StackPanel>
+                                    <TextBlock Text="Birleştirilmiş dersleri yönet" FontSize="10" Foreground="#6B7280" Margin="0,0,0,10"/>
+                                    <Button Content="Yönet" Click="OpenLessonsFromSettings" Style="{StaticResource PrimaryButton}" Padding="10,5"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Lisans Bilgisi (Was Col 0, Now Col 2) -->
+                            <Border Grid.Column="2" Background="{DynamicResource InfoLightBrush}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1" Padding="15" CornerRadius="{StaticResource CardCornerRadius}">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="🔑" FontSize="16" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Lisans Bilgisi" FontWeight="Bold" Foreground="{DynamicResource PrimaryDarkBrush}"/>
+                                    </StackPanel>
+                                    
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                                            <TextBlock Text="Lisans Bitiş" FontSize="10" Foreground="#6B7280"/>
+                                            <TextBlock x:Name="LicenseExpiryText" Text="Bulunamadı" FontSize="12" FontWeight="SemiBold" Margin="0,3,0,0"/>
+                                        </StackPanel>
+                                        
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="Kalan Gün" FontSize="10" Foreground="#6B7280"/>
+                                            <TextBlock x:Name="LicenseDaysLeftText" Text="-" FontSize="12" FontWeight="SemiBold" Margin="0,3,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Giriş ve Güvenlik Ayarları (Was Col 2, Now Col 4) -->
+                            <Border Grid.Column="4" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="1" Padding="15" CornerRadius="{StaticResource CardCornerRadius}">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="🛡️" FontSize="16" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Giriş / Şifre" FontWeight="Bold"/>
+                                    </StackPanel>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="120"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                                            <Grid Margin="0,0,0,8">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                                    <TextBlock Text="Mevcut Şifre" FontSize="9" Foreground="Gray"/>
+                                                    <PasswordBox x:Name="CurrentPwInput" Padding="3" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Margin="0,0,5,0">
+                                                    <TextBlock Text="Yeni Şifre" FontSize="9" Foreground="Gray"/>
+                                                    <PasswordBox x:Name="NewPwInput" Padding="3" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2">
+                                                    <TextBlock Text="Yeni (Tekrar)" FontSize="9" Foreground="Gray"/>
+                                                    <PasswordBox x:Name="RepeatPwInput" Padding="3" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                            </Grid>
+                                            <Button Content="Şifreyi Değiştir" Click="ChangePassword_Click" 
+                                                    Padding="5,2" FontSize="10" Style="{StaticResource PrimaryButton}"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <CheckBox x:Name="CheckEnableLoginPassword" Content="Girişte Şifre Sor" FontSize="11" VerticalContentAlignment="Center" Click="CheckEnableLoginPassword_Click"/>
+                                            <TextBlock Text="Veritabanı bazlı koruma" FontSize="9" Foreground="Gray" Margin="18,2,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Güncelleme Paneli (Was Col 4, Now Col 6) -->
+                            <Border Grid.Column="6" Background="{DynamicResource SuccessLightBrush}" BorderBrush="{DynamicResource SuccessBrush}" BorderThickness="1" Padding="15" CornerRadius="{StaticResource CardCornerRadius}">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="🚀" FontSize="16" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Güncelleme" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}"/>
+                                    </StackPanel>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="Sürüm" FontSize="9" Foreground="#059669"/>
+                                            <TextBlock x:Name="AppVersionText" Text="1.0.0.0" FontSize="11" FontWeight="Bold" Foreground="#065F46"/>
+                                            <TextBlock Text="Son Kontrol" FontSize="9" Foreground="#059669" Margin="0,4,0,0"/>
+                                            <TextBlock x:Name="LastCheckDateText" Text="-" FontSize="10" Foreground="#065F46"/>
+                                        </StackPanel>
+
+                                        <Button Grid.Column="1" Click="CheckUpdate_Click" Style="{StaticResource SuccessButton}" 
+                                                Padding="10,5" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Kontrol Et" FontSize="11" FontWeight="Bold"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        
+                        <!-- Tehlikeli Bölge (Danger Zone) -->
+                        <Border Background="{DynamicResource ErrorLightBrush}" BorderBrush="{DynamicResource ErrorBrush}" BorderThickness="1" Padding="15" Margin="0,0,0,20" CornerRadius="{StaticResource CardCornerRadius}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="⚠️" FontSize="16" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Tehlikeli Bölge" FontWeight="Bold" Foreground="#DC2626"/>
+                                </StackPanel>
+                                <TextBlock Text="Bu işlemler geri alınamaz. Dikkatli olun!" Foreground="#7F1D1D" FontSize="11" Margin="0,0,0,15"/>
+                                
+                                <WrapPanel>
+                                    <!-- Öğretmen Atamalarını Sıfırla -->
+                                    <StackPanel Margin="0,0,20,10">
+                                        <Button Content="🔄 Öğretmen Atamalarını Sıfırla" Click="ResetTeacherAssignments_Click"
+                                                Padding="12,8" Background="#F97316" Foreground="White" BorderThickness="0"/>
+                                        <TextBlock Text="Tüm derslerdeki öğretmen atamalarını iptal eder." 
+                                                   FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                    
+                                    <!-- Ek Ders Verilerini Sil -->
+                                    <StackPanel Margin="0,0,20,10">
+                                        <Button Content="💰 Ek Ders Verilerini Sil" Click="DeleteEkDersData_Click"
+                                                Padding="12,8" Background="#EF4444" Foreground="White" BorderThickness="0"/>
+                                        <TextBlock Text="Aylık ek ders kayıtlarını tamamen siler." 
+                                                   FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                    
+                                    <!-- Dağıtımı Sıfırla -->
+                                    <StackPanel Margin="0,0,20,10">
+                                        <Button Content="📅 Dağıtımı Sıfırla" Click="ResetDistribution_Click"
+                                                Padding="12,8" Background="#7C3AED" Foreground="White" BorderThickness="0"/>
+                                        <TextBlock Text="Tüm dağıtım bloklarının yerleşimlerini temizler." 
+                                                   FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                    
+                    <!-- Lessons View -->
+                    <ScrollViewer x:Name="LessonsPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!-- Header -->
+                            <Grid Margin="0,0,0,20">
+                                <StackPanel>
+                                    <TextBlock Text="Ders Havuzu" FontSize="24" FontWeight="Bold"/>
+                                    <TextBlock Text="Sisteme kayıtlı tüm dersleri buradan yönetebilirsiniz" Foreground="Gray"/>
+                                </StackPanel>
+                                <Button Content="+ Yeni Ders Ekle" Click="AddLesson_Click" 
+                                        HorizontalAlignment="Right" VerticalAlignment="Top"
+                                        Padding="15,8" Style="{StaticResource PrimaryButton}"/>
+                            </Grid>
+                            
+                            <!-- Search Box -->
+                            <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,0,15" CornerRadius="{StaticResource InputCornerRadius}">
+                                <Grid>
+                                    <TextBlock Text="🔍" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    <TextBox x:Name="LessonSearchBox" Padding="8" Margin="25,0,0,0" 
+                                             TextChanged="LessonSearch_TextChanged" BorderThickness="0" Background="Transparent"/>
+                                    <TextBlock x:Name="LessonSearchPlaceholder" Text="Ders Ara..." Foreground="Gray" 
+                                               VerticalAlignment="Center" Margin="30,0,0,0" IsHitTestVisible="False"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Hızlı Ders Ekle (Panel for Main Page) -->
+                            <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="15" Margin="0,0,0,15" CornerRadius="{StaticResource CardCornerRadius}">
+                                <StackPanel>
+                                    <TextBlock Text="⚡ Hızlı Ders Ekle" FontWeight="Bold" FontSize="14" Margin="0,0,0,10" Foreground="{DynamicResource PrimaryBrush}"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                            <TextBlock Text="Ders Adı" FontSize="10" Foreground="Gray"/>
+                                            <TextBox x:Name="PageLessonName" Height="28" Padding="5" FontSize="12" TabIndex="10"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                            <TextBlock Text="Kod" FontSize="10" Foreground="Gray"/>
+                                            <TextBox x:Name="PageLessonCode" Height="28" Padding="5" FontSize="12" TabIndex="11"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                            <TextBlock Text="Blok" FontSize="10" Foreground="Gray"/>
+                                            <TextBox x:Name="PageLessonBlock" Text="2" Height="28" Padding="5" FontSize="12" TabIndex="12" ToolTip="Örnek: 2+2+1"/>
+                                        </StackPanel>
+                                        <Button Grid.Column="3" Content="Hızlı Kaydet" Click="QuickAddPageLesson_Click" Height="28" Padding="15,0" VerticalAlignment="Bottom" TabIndex="14" Style="{StaticResource PrimaryButton}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Lessons List -->
+                            <Border Background="#F8F9FA" BorderBrush="#E5E7EB" BorderThickness="1" Padding="5">
+                                <StackPanel x:Name="LessonsListContainer"/>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                    
+                    <!-- Teachers View - Compact -->
+                    <Grid x:Name="TeachersPanel" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="240"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Left: List -->
+                        <Border Grid.Column="0" Background="{DynamicResource SurfaceAltBrush}" 
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                
+                                <!-- Header -->
+                                <Grid Grid.Row="0" Margin="16,16,16,12">
+                                    <TextBlock Text="Öğretmenler" FontSize="16" FontWeight="Bold" 
+                                               VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                    <Button Content="+" Click="AddTeacher_Click" HorizontalAlignment="Right" 
+                                            Width="28" Height="28" FontSize="16" FontWeight="Bold" Cursor="Hand" ToolTip="Yeni öğretmen ekle">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="14">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+                                
+                                <!-- Search -->
+                                <Border Grid.Row="1" Margin="12,0,12,12" Background="{DynamicResource SurfaceBrush}" 
+                                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="8,4">
+                                    <Grid>
+                                        <TextBlock Text="🔍" VerticalAlignment="Center" Margin="4,0,0,0" 
+                                                   FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                                        <TextBox x:Name="TeacherSearchBox" Margin="24,0,0,0" BorderThickness="0" 
+                                                 Background="Transparent" TextChanged="TeacherSearch_TextChanged" 
+                                                 VerticalContentAlignment="Center" Height="22" FontSize="12"
+                                                 Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                        <TextBlock x:Name="TeacherSearchPlaceholder" Text="Öğretmen ara..." 
+                                                   Foreground="{DynamicResource TextMutedBrush}" FontSize="12"
+                                                   VerticalAlignment="Center" Margin="28,0,0,0" IsHitTestVisible="False"/>
+                                    </Grid>
+                                </Border>
+                                
+                                <!-- List -->
+                                <ListBox x:Name="TeachersList" Grid.Row="2" Background="Transparent" BorderThickness="0" 
+                                         SelectionChanged="TeachersList_SelectionChanged" 
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         Padding="8,0">
+                                    <ListBox.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Düzenle" Click="EditTeacherContext_Click">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="Edit"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <Separator/>
+                                            <MenuItem Header="Sil" Click="DeleteTeacher_Click">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="Sil" Foreground="Red"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </ListBox.ContextMenu>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="Padding" Value="10,6"/>
+                                            <Setter Property="Margin" Value="0,1"/>
+                                            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ListBoxItem">
+                                                        <Border x:Name="ItemBorder" Background="{TemplateBinding Background}" 
+                                                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsSelected" Value="True">
+                                                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource InfoLightBrush}"/>
+                                                                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+                                                                <Setter TargetName="ItemBorder" Property="BorderThickness" Value="2"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource SurfaceAltBrush}"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="34"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <!-- Initial Avatar -->
+                                                <Border Grid.Column="0" Width="30" Height="30" CornerRadius="15" 
+                                                        Background="{Binding InitialColor}" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Initial}" FontWeight="Bold" FontSize="11" 
+                                                               Foreground="{Binding InitialTextColor}" 
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                
+                                                <!-- Text Info -->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="6,0,0,0">
+                                                    <DockPanel>
+                                                        <!-- Icon removed -->
+                                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12" 
+                                                                   Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                                    </DockPanel>
+                                                    
+                                                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0" ToolTip="Toplam Atanan Ders Saati">
+                                                        <TextBlock Text="{Binding Branch}" Foreground="{DynamicResource PrimaryBrush}" 
+                                                                   FontSize="10" FontWeight="SemiBold" VerticalAlignment="Bottom" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="|" Foreground="{DynamicResource TextMutedBrush}" FontSize="9" VerticalAlignment="Bottom" Margin="0,0,5,0"/>
+                                                        
+                                                        <TextBlock Text="{Binding Position}" Foreground="{DynamicResource WarningBrush}" 
+                                                                   FontWeight="Bold" FontSize="9" VerticalAlignment="Bottom" Margin="0,0,5,0">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Position}" Value="mudur">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                            <Setter Property="Text" Value="MÜDÜR"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Position}" Value="mudur_yrd">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                            <Setter Property="Text" Value="MD.YRD"/>
+                                                                        </DataTrigger>
+                                                                         <DataTrigger Binding="{Binding Position}" Value="mudurbas_yrd">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                            <Setter Property="Text" Value="MD.BAŞ.YRD"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        <TextBlock Text="Toplam " Foreground="{DynamicResource TextMutedBrush}" 
+                                                                   FontSize="10" VerticalAlignment="Bottom"/>
+                                                        <TextBlock Text="{Binding TotalAssignedHours}" Foreground="{DynamicResource SuccessBrush}" 
+                                                                   FontSize="10" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                                                        <TextBlock Text=" saat" Foreground="{DynamicResource TextSecondaryBrush}" 
+                                                                   FontSize="10" VerticalAlignment="Bottom"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Grid>
+                        </Border>
+                        
+                        <!-- Right: Details (Modern Card Layout) -->
+                        <Grid Grid.Column="1" Background="{DynamicResource BackgroundBrush}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/> <!-- Info Section (Fixed) -->
+                                <RowDefinition Height="*"/>    <!-- Tabs (Scrollable Content) -->
+                            </Grid.RowDefinitions>
+
+                            <!-- Empty State Message -->
+                            <StackPanel x:Name="TeacherSelectMessage" Grid.Row="0" Grid.RowSpan="2" 
+                                        HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="10">
+                                <TextBlock Text="👈" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                                <TextBlock Text="Lütfen listeden bir öğretmen seçin" 
+                                           Foreground="{DynamicResource TextMutedBrush}" FontSize="18" FontWeight="Medium"/>
+                            </StackPanel>
+
+                            <!-- 1. Teacher Info (Header + Form) - FIXED AT TOP -->
+                            <StackPanel x:Name="TeacherDetailPanel" Grid.Row="0" Visibility="Collapsed" Margin="0,0,0,10">
+                                <!-- Info Header -->
+                                <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="16,6">
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,12,0"/>
+                                            <Border Background="{DynamicResource PrimaryLightBrush}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center" Margin="0,0,12,0">
+                                                <TextBlock Text="{Binding Position}" Foreground="{DynamicResource PrimaryDarkBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                            </Border>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Toplam Saat: " Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12"/>
+                                                <TextBlock Text="{Binding TotalAssignedHours}" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="12"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        
+                                        <!-- Action Buttons -->
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Content="Kaydet" Click="SaveTeacher_Click" Width="80" Margin="6,0" Style="{StaticResource PrimaryButton}"/>
+                                            <Button Content="Sil" Click="DeleteTeacher_Click" Width="60" Margin="6,0" Background="#EF4444" Foreground="White" BorderThickness="0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                                
+                                <!-- Form Fields -->
+                                <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/> <!-- TC Label -->
+                                            <ColumnDefinition Width="90"/>   <!-- TC Input -->
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="Auto"/> <!-- Gorev Label -->
+                                            <ColumnDefinition Width="90"/>   <!-- Gorev Input -->
+                                            <ColumnDefinition Width="10"/> 
+                                            <ColumnDefinition Width="Auto"/> <!-- Nobet Label -->
+                                            <ColumnDefinition Width="60"/>   <!-- Nobet Input -->
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="Auto"/> <!-- Yer Label -->
+                                            <ColumnDefinition Width="100"/>  <!-- Yer Input -->
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="Auto"/> <!-- Kulup Label -->
+                                            <ColumnDefinition Width="50"/>   <!-- Kulup Input -->
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="Auto"/> <!-- Rehber Label -->
+                                            <ColumnDefinition Width="45"/>   <!-- Rehber Input -->
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="Auto"/> <!-- Max Label -->
+                                            <ColumnDefinition Width="30"/>   <!-- Max Input -->
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="Auto"/> <!-- Ek Label -->
+                                            <ColumnDefinition Width="Auto"/> <!-- Ek Checkbox -->
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <!-- TC -->
+                                        <TextBlock Grid.Column="0" Text="TC :" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,3,0"/>
+                                        <TextBox Grid.Column="1" Text="{Binding TcNo}" Height="24" Padding="2,2" FontSize="11" LostFocus="TeacherInfo_AutoSaveGeneric" MaxLength="11"/>
+
+                                        <!-- Gorev -->
+                                        <TextBlock Grid.Column="3" Text="Görevi :" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,3,0"/>
+                                        <ComboBox Grid.Column="4" x:Name="ComboPosition" SelectedValue="{Binding Position}" SelectedValuePath="Tag" Height="24" Padding="2,2" FontSize="11">
+                                            <ComboBoxItem Content="Müdür" Tag="mudur"/>
+                                            <ComboBoxItem Content="Müd.Baş Yrd" Tag="mudurbas_yrd"/>
+                                            <ComboBoxItem Content="Müdür Yrd" Tag="mudur_yrd"/>
+                                            <ComboBoxItem Content="Müd.Pans.Yrd" Tag="mudur_pansiyon_yrd"/>
+                                            <ComboBoxItem Content="Rehberlik" Tag="rehberlik"/>
+                                            <ComboBoxItem Content="Formatör" Tag="formator"/>
+                                            <ComboBoxItem Content="Öğretmen" Tag="ogretmen"/>
+                                            <ComboBoxItem Content="Sözleşme" Tag="sozlesme"/>
+                                        </ComboBox>
+
+                                        <!-- Nobet Gun -->
+                                        <TextBlock Grid.Column="6" Text="Nöbet :" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,3,0"/>
+                                        <ComboBox Grid.Column="7" x:Name="ComboDutyDay" SelectedValue="{Binding DutyDay}" Height="24" Padding="2,2" FontSize="11" SelectionChanged="TeacherInfo_AutoSave"/>
+
+                                        <!-- Nobet Yer -->
+                                        <TextBlock Grid.Column="9" Text="Yer :" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,3,0"/>
+                                        <ComboBox Grid.Column="10" x:Name="ComboDutyPlace" IsEditable="True" DisplayMemberPath="Name" SelectedValuePath="Name" SelectedValue="{Binding DutyLocation}" Height="24" Padding="2,2" FontSize="11" SelectionChanged="TeacherInfo_AutoSave"/>
+
+                                        <!-- Club -->
+                                        <TextBlock Grid.Column="12" Text="Kulüp :" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,3,0"/>
+                                        <ComboBox Grid.Column="13" x:Name="ComboClub" IsEditable="True" DisplayMemberPath="Name" SelectedValuePath="Name" SelectedValue="{Binding Club}" Height="24" Padding="2,2" FontSize="11" SelectionChanged="TeacherInfo_AutoSave"/>
+
+                                        <!-- Rehber -->
+                                        <TextBlock Grid.Column="15" Text="Reh :" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,3,0"/>
+                                        <ComboBox Grid.Column="16" x:Name="ComboGuidanceClass" SelectedValue="{Binding Guidance}" SelectedValuePath="Id" DisplayMemberPath="Name" Height="24" Padding="2,2" FontSize="11" SelectionChanged="TeacherInfo_AutoSave"/>
+
+                                        <!-- Max -->
+                                        <TextBlock Grid.Column="18" Text="Max :" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,3,0"/>
+                                        <TextBox Grid.Column="19" Text="{Binding MaxHoursPerDay}" Width="25" Height="24" Padding="2,2" FontSize="11"/>
+
+                                        <!-- Ek -->
+                                        <TextBlock Grid.Column="21" Text="Ek :" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,3,0"/>
+                                        <CheckBox Grid.Column="22" IsChecked="{Binding HasExtraLessons}" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- 2. Tabbed Content (Timetable & Extra Lessons) -->
+                            <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="0">
+                                <TabControl.Style>
+                                    <Style TargetType="TabControl">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Visibility, ElementName=TeacherSelectMessage}" Value="Visible">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TabControl.Style>
+                                <TabControl.ItemContainerStyle>
+                                    <Style TargetType="TabItem">
+                                        <Setter Property="FontSize" Value="13"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="Padding" Value="12,6"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TabItem">
+                                                    <Grid>
+                                                        <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0" Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header"/>
+                                                        </Border>
+                                                        <Rectangle x:Name="Underline" Height="2" VerticalAlignment="Bottom" Fill="Transparent"/>
+                                                    </Grid>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="{DynamicResource PrimaryBrush}"/>
+                                                            <Setter TargetName="Underline" Property="Fill" Value="{DynamicResource PrimaryBrush}"/>
+                                                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="{DynamicResource PrimaryDarkBrush}"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TabControl.ItemContainerStyle>
+
+                                <!-- TAB 1: Ders Programı -->
+                                <TabItem Header="Ders Programı">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+                                        <Border x:Name="TeacherTimetableArea" Background="{DynamicResource SurfaceBrush}" 
+                                                BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="8" Padding="20" Visibility="Collapsed" Margin="0,0,0,20">
+                                            <StackPanel>
+                                            <DockPanel Margin="0,0,0,16">
+                                                <TextBlock Text="📅 Zaman Tablosu (Ders Programı)" FontWeight="Bold" FontSize="16" 
+                                                           VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                <CheckBox x:Name="CheckHideWeekend" Content="Haftasonunu Gizle" IsChecked="False" 
+                                                          HorizontalAlignment="Right" VerticalContentAlignment="Center"
+                                                          Click="CheckHideWeekend_Click"/>
+                                            </DockPanel>
+                                                <StackPanel x:Name="TeacherTimetableGrid"/>
+                                                <TextBlock Text="Hücrelere tıklayarak açma/kapama işlemi yapabilirsiniz. Kapalı slotlar -- işareti ile gösterilir." 
+                                                           FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </ScrollViewer>
+                                </TabItem>
+
+                                <!-- TAB 2: Ek Ders -->
+                                <TabItem Header="Ek Ders">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+                                        <Border x:Name="TeacherEkDersArea" Background="{DynamicResource SurfaceBrush}" 
+                                                BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="8" Padding="20" Visibility="Collapsed">
+                                            <StackPanel>
+                                                <DockPanel LastChildFill="False" Margin="0,0,0,16">
+                                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="💰 Ek Ders Dağılımı" FontWeight="Bold" FontSize="16" 
+                                                                   VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,8,0"/>
+                                                        <Button Width="16" Height="16" Background="Transparent" BorderBrush="Gray" BorderThickness="1" 
+                                                                Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                                            <Button.Resources>
+                                                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="8"/></Style>
+                                                            </Button.Resources>
+                                                            <TextBlock Text="?" FontSize="10" FontWeight="Bold" Foreground="Gray"/>
+                                                            <Button.ToolTip>
+                                                                <ToolTip Background="White" BorderBrush="Gray" Foreground="#333" MaxWidth="400">
+                                                                    <TextBlock TextWrapping="Wrap" FontSize="12">
+                                                                        Alttaki tabloda seçili öğretmenin varsayılan olarak haftalık ekders dağılımı bulunmakta, haftalık ders saatlerine göre Otomatik hesapla butonu ile seçili öğretmene ait ekdersleri hesaplanıp tabloya eklenir bunun dışındaki ekderslerini (kurs egzersiz gibi) alttaki tabloya girin. Ekders modülünde hesaplamalar öğretmenleri bu ekrandaki ekders dağılım tablosuna göre hesaplanır. Tümünü hesapla butonu ekders almak üzere yukarıda işaretlenen tüm öğretmenlerin haftalık ekderslerini hesaplar.
+                                                                    </TextBlock>
+                                                                </ToolTip>
+                                                            </Button.ToolTip>
+                                                        </Button>
+                                                    </StackPanel>
+                                                    
+                                                    <Button Content="💾 Kaydet" Click="SaveTeacher_Click" DockPanel.Dock="Right" 
+                                                            Padding="16,8" Background="#10B981" Foreground="White" 
+                                                            BorderThickness="0" Margin="8,0,0,0">
+                                                        <Button.ToolTip>
+                                                            <ToolTip>
+                                                                <TextBlock Text="Seçili öğretmenin ek ders tablosundaki değişikliklerini veritabanına kaydeder."/>
+                                                            </ToolTip>
+                                                        </Button.ToolTip>
+                                                    </Button>
+
+                                                    <Button Content="Tümünü Hesapla" Click="CalcAllTeacherTemplates_Click" DockPanel.Dock="Right" 
+                                                            Padding="12,8" Background="#EF4444" Foreground="White" 
+                                                            BorderThickness="0" Margin="8,0,0,0">
+                                                        <Button.ToolTip>
+                                                            <ToolTip>
+                                                                <TextBlock Text="Listede 'Ek Ders Alıyor' olarak işaretli TÜM öğretmenlerin 101 (Gündüz), 110 (Hazırlık) ve 119 (Nöbet) ek derslerini ders programına göre otomatik hesaplar. Elle girilen diğer alanları (Kurs, Egzersiz vb.) KORUR." MaxWidth="300" TextWrapping="Wrap"/>
+                                                            </ToolTip>
+                                                        </Button.ToolTip>
+                                                    </Button>
+
+                                                    <Button Content="Otomatik Hesapla" Click="CalcEkDers_Click" DockPanel.Dock="Right" 
+                                                            Padding="12,8" Background="{DynamicResource PrimaryBrush}" 
+                                                            Foreground="White" BorderThickness="0" Margin="8,0,0,0">
+                                                        <Button.ToolTip>
+                                                            <ToolTip>
+                                                                <TextBlock Text="Sadece SEÇİLİ öğretmenin 101 (Gündüz), 110 (Hazırlık) ve 119 (Nöbet) ek derslerini ders programına göre otomatik hesaplar. Elle girilen diğer alanları (Kurs, Egzersiz vb.) KORUR." MaxWidth="300" TextWrapping="Wrap"/>
+                                                            </ToolTip>
+                                                        </Button.ToolTip>
+                                                    </Button>
+
+                                                    <Button Content="🧹 Temizle" Click="ClearEkDers_Click" DockPanel.Dock="Right" 
+                                                            Padding="12,8" Background="#F59E0B" Foreground="White" 
+                                                            BorderThickness="0">
+                                                        <Button.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem Header="Seçili Öğretmeni Sıfırla" Click="ClearSelectedTeacher_Click" ToolTip="Seçili öğretmenin tablosundaki TÜM verileri (elle girilenler dahil) sıfırlar."/>
+                                                                <MenuItem Header="Tüm Öğretmenleri Sıfırla" Click="ClearAllTeachers_Click" ToolTip="TÜM öğretmenlerin tablolarındaki TÜM verileri (elle girilenler dahil) sıfırlar."/>
+                                                            </ContextMenu>
+                                                        </Button.ContextMenu>
+                                                        <Button.ToolTip>
+                                                            <ToolTip>
+                                                                <TextBlock Text="Ek ders verilerini sıfırlamak için kullanılır. Tıklayarak seçenekleri (Sadece Bu Öğretmen veya Tümü) görebilirsiniz." MaxWidth="300" TextWrapping="Wrap"/>
+                                                            </ToolTip>
+                                                        </Button.ToolTip>
+                                                    </Button>
+                                                </DockPanel>
+                                                
+                                                <StackPanel x:Name="EkDersGridContainer" Background="Transparent"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </ScrollViewer>
+                                </TabItem>
+
+                                <!-- TAB 3: Atanan Dersler -->
+                                <TabItem Header="Atanan Dersler">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+                                        <Border Background="{DynamicResource SurfaceBrush}" 
+                                                BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="8" Padding="20">
+                                            <StackPanel>
+                                                <TextBlock Text="📚 Atanan Dersler Listesi" FontWeight="Bold" FontSize="16" 
+                                                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,16"/>
+                                                           
+                                                <DataGrid x:Name="TeacherAssignmentsGrid" AutoGenerateColumns="False" 
+                                                          CanUserAddRows="False" IsReadOnly="True" 
+                                                          HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                                                          BorderThickness="1" BorderBrush="#E5E7EB" Background="White">
+                                                    <DataGrid.Columns>
+                                                        <DataGridTextColumn Header="Sınıf" Binding="{Binding ClassName}" Width="120" FontWeight="Bold"/>
+                                                        <DataGridTextColumn Header="Ders" Binding="{Binding LessonName}" Width="*"/>
+                                                        <DataGridTextColumn Header="Toplam Saat" Binding="{Binding TotalHours}" Width="100"/>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                                
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                                    <TextBlock Text="Genel Toplam: " FontWeight="Bold"/>
+                                                    <TextBlock x:Name="TxtTeacherAssignmentTotal" Text="0" FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}"/>
+                                                    <TextBlock Text=" saat"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </ScrollViewer>
+                                </TabItem>
+                            </TabControl>
+                        </Grid>
+                    </Grid>
+                    
+                    <!-- Distribution View -->
+                    <Grid x:Name="DistributionPanel" Visibility="Collapsed">
+                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/> <!-- Header -->
+                            <RowDefinition Height="Auto"/> <!-- Stats -->
+                            <RowDefinition Height="*"/>    <!-- Content -->
+                         </Grid.RowDefinitions>
+                         
+                         <!-- Header & Controls -->
+                         <Border Grid.Row="0" Margin="0,0,0,10" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="15">
+                             <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                    <Button Content="🔍 Veri Kontrolü" Click="Nav_Validation" Padding="10,7" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
+
+                                    <Button x:Name="NavBtnManual" Content="✋ Elle Dağıtım" Click="Nav_Manual" Padding="10,7" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0" ToolTip="Programı manuel olarak düzenleyebilir ve kilitleyebilirsiniz"/>
+
+                                    <Rectangle Width="1" Fill="#E5E7EB" Margin="4,2"/>
+
+                                    <Button Content="🚀 Dağıtım V2" Click="StartDistribution_Click" Padding="10,7" Style="{StaticResource PrimaryButton}" Margin="6,0,6,0"/>
+
+                                    <Button Content="🤖 Dağıtım V3" Click="StartOrToolsDistribution_Click" Padding="10,7" Style="{StaticResource TealButton}" Margin="0,0,6,0" ToolTip="AI motoru ile matematiksel dağıtım yapar"/>
+
+                                    <Button Visibility="Collapsed" Content="💎 Dağıtım V7" Click="StartOrToolsAdvancedDistribution_Click" Padding="10,7" Style="{StaticResource PurpleButton}" Margin="0,0,6,0" ToolTip="Gelişmiş AI: En zor şartlarda bile en iyi yerleşimi yapar"/>
+
+                                    <Button Content="🗑️ Dağıtımı Sil" Click="DeleteDistribution_Click" Padding="10,7" Style="{StaticResource RedButton}"/>
+
+                                    <Rectangle Width="1" Fill="#E5E7EB" Margin="4,2"/>
+
+                                    <Button Content="✏️ Programda Değişiklik" Click="ScheduleEdit_Click" Padding="10,7" Style="{StaticResource TealButton}" Margin="6,0,0,0" ToolTip="Öğretmen programında blok taşıma ve düzenleme"/>
+
+                                </StackPanel>
+                                
+                                <!-- Stats -->
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <StackPanel Margin="10,0">
+                                        <TextBlock Text="Yerleşen" FontSize="10" Foreground="Gray"/>
+                                        <TextBlock x:Name="StatPlaced" Text="%0" FontSize="18" FontWeight="Bold" Foreground="#10B981"/>
+                                    </StackPanel>
+                                    <Rectangle Width="1" Fill="#E5E7EB" Margin="10,5"/>
+                                    <StackPanel Margin="10,0" Cursor="Hand" MouseLeftButtonUp="StatUnplaced_Click" ToolTip="Dağıtılamayan blokları görmek için tıklayın">
+                                        <TextBlock Text="Dağıtılamayan" FontSize="10" Foreground="Gray"/>
+                                        <TextBlock x:Name="StatUnplaced" Text="0" FontSize="18" FontWeight="Bold" Foreground="#EF4444"/>
+                                    </StackPanel>
+                                    <Rectangle Width="1" Fill="#E5E7EB" Margin="10,5"/>
+                                    <StackPanel Margin="10,0">
+                                        <TextBlock Text="Boşluk (Saat)" FontSize="10" Foreground="Gray"/>
+                                        <TextBlock x:Name="StatGaps" Text="0" FontSize="18" FontWeight="Bold" Foreground="Orange"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                
+                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                    <CheckBox x:Name="CheckDistHideWeekend" Content="Haftasonunu Gizle" IsChecked="False" 
+                                              VerticalAlignment="Center" Margin="0,0,15,0" Click="CheckDistHideWeekend_Click"/>
+                                </StackPanel>
+                             </Grid>
+                         </Border>
+                         
+                         <!-- Dual Grid Content -->
+                         <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Left: Teacher -->
+                            <Border Grid.Column="0" Margin="0,0,5,0" BorderBrush="#E5E7EB" BorderThickness="1">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Border Background="#F9FAFB" Padding="10" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                                        <DockPanel>
+                                            <TextBlock x:Name="DistTeacherHeaderInfo" Text="Öğretmen" FontWeight="Bold" VerticalAlignment="Center"/>
+                                            <ComboBox x:Name="DistTeacherCombo" Width="120" HorizontalAlignment="Right" 
+                                                      DisplayMemberPath="Name" SelectedValuePath="Id" SelectionChanged="DistTeacherCombo_SelectionChanged"/>
+                                        </DockPanel>
+                                    </Border>
+                                    
+                                    <ScrollViewer Grid.Row="1">
+                                        <StackPanel x:Name="DistTeacherGrid" Margin="10"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Border>
+                            
+                            <!-- Right: Class -->
+                            <Border Grid.Column="1" Margin="5,0,0,0" BorderBrush="#E5E7EB" BorderThickness="1">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Border Background="#F9FAFB" Padding="10" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                                        <DockPanel>
+                                            <TextBlock Text="Sınıf" FontWeight="Bold" VerticalAlignment="Center"/>
+                                            <ComboBox x:Name="DistClassCombo" Width="140" HorizontalAlignment="Right"
+                                                      DisplayMemberPath="Name" SelectedValuePath="Id" SelectionChanged="DistClassCombo_SelectionChanged"/>
+                                        </DockPanel>
+                                    </Border>
+                                    
+                                    <ScrollViewer Grid.Row="1">
+                                        <StackPanel x:Name="DistClassGrid" Margin="10"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Border>
+                         </Grid>
+                    </Grid>
+
+                    <!-- MANUEL DAĞITIM (ELLE PROGRAMLAMA) PANELİ -->
+                    <Grid x:Name="ManualDistributionPanel" Visibility="Collapsed" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="280"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- SOL PANEL -->
+                        <Grid Grid.Column="0" Margin="0,0,10,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- 1. Öğretmen Seçimi -->
+                            <Border Grid.Row="0" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="10" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="Öğretmen Seçimi" FontWeight="Bold" Margin="0,0,0,5"/>
+                                    <ComboBox x:Name="ComboManualTeacher" Height="30" 
+                                              DisplayMemberPath="DisplayName" 
+                                              SelectionChanged="ComboManualTeacher_SelectionChanged"
+                                              Padding="5,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 2. Bilgi Paneli -->
+                            <Border Grid.Row="1" Background="#ECFEFF" BorderBrush="#A5F3FC" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="10" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="İstatistikler" FontWeight="Bold" Foreground="#0891B2" Margin="0,0,0,5"/>
+                                    <Grid Margin="0,2">
+                                        <TextBlock Text="Toplam Yük:" Foreground="#555" FontSize="11"/>
+                                        <TextBlock x:Name="TxtManualTotalLoad" Text="-" FontWeight="Bold" HorizontalAlignment="Right" Foreground="#333" FontSize="11"/>
+                                    </Grid>
+                                    <Grid Margin="0,2">
+                                        <TextBlock Text="Yerleşen:" Foreground="#555" FontSize="11"/>
+                                        <TextBlock x:Name="TxtManualPlacedLoad" Text="-" FontWeight="Bold" HorizontalAlignment="Right" Foreground="#15803D" FontSize="11"/>
+                                    </Grid>
+                                    <Grid Margin="0,2">
+                                        <TextBlock Text="Kalan:" Foreground="#555" FontSize="11"/>
+                                        <TextBlock x:Name="TxtManualRemainingLoad" Text="-" FontWeight="Bold" HorizontalAlignment="Right" Foreground="#B91C1C" FontSize="11"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 3. Dağıtım Blokları Listesi -->
+                            <Border Grid.Row="2" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="10">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Yerdeki Bloklar (Sürükle)" Grid.Row="0" FontWeight="Bold" Margin="0,0,0,5"/>
+                                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl x:Name="ListManualBlocks">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="4" Margin="0,0,0,5" Cursor="Hand"
+                                                            Padding="8"
+                                                            MouseMove="ManualBlock_MouseMove"
+                                                            PreviewMouseLeftButtonDown="ManualBlock_PreviewMouseLeftButtonDown">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                                <Border CornerRadius="4" Background="#EEF2FF" Margin="0,0,8,0" Padding="6,2">
+                                                                    <TextBlock Text="{Binding DisplayCode}" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="#4F46E5" FontSize="10"/>
+                                                                </Border>
+                                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding ClassName}" FontWeight="SemiBold" FontSize="11"/>
+                                                                <TextBlock Text="{Binding DurationInfo}" FontSize="10" Foreground="Gray"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <!-- SAĞ PANEL: Ders Programı -->
+                        <Border Grid.Column="1" Background="White" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}" Padding="15">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="Program Tablosu" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    <TextBlock Text="(Sürükleyip Bırakın)" FontSize="12" Foreground="Gray" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    
+                                    <Button x:Name="BtnSaveManual" Content="💾 Değişiklikleri Kaydet" Click="BtnSaveManual_Click" 
+                                            Margin="15,0,0,0" Padding="10,4" Style="{StaticResource SuccessButton}"
+                                            Visibility="Collapsed"/>
+                                </StackPanel>
+
+                                <!-- Grid Container -->
+                                <Grid x:Name="ManualScheduleGrid" Grid.Row="1" Background="#F9FAFB"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Grid x:Name="ValidationPanel" Visibility="Collapsed">
+                        <views:DataValidationView />
+                    </Grid>
+
+                    <!-- Classes Panel (Sınıf Müfredat ve Atama) -->
+                    <Grid x:Name="ClassesPanel" Visibility="Collapsed" Margin="0,0,16,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Header -->
+                        <DockPanel Grid.Row="0" Margin="0,0,0,15">
+                            <StackPanel DockPanel.Dock="Left">
+                                <TextBlock Text="Sınıf Müfredat ve Atama" FontSize="24" FontWeight="Bold"/>
+                                <TextBlock Text="Sınıflara ders ekleyin ve öğretmen atayın" Foreground="Gray"/>
+                            </StackPanel>
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="👨‍🏫 Öğretmen Bazlı Atama" Click="OpenTeacherAssignment_Click"
+                                        VerticalAlignment="Center" Padding="15,8" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0"/>
+                                <Button Content="🔗 Dersleri Birleştir (Kardeş Dersler)" Click="OpenCombinedLessons_Click"
+                                        VerticalAlignment="Center" Padding="15,8" Style="{StaticResource TealButton}" />
+                            </StackPanel>
+                        </DockPanel>
+                        
+                        <!-- Modern 2-Column Layout -->
+                        <Grid Grid.Row="1" Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="180"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <!-- Column 1: Sınıf Listesi (Sidebar) -->
+                                <Border Grid.Column="0" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="12" Margin="0,0,16,0" CornerRadius="{StaticResource CardCornerRadius}">
+                                    <DockPanel>
+                                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                                            <TextBlock Text="🏫 Sınıflar" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
+                                            <Button Content="+" Click="AddClass_Click" HorizontalAlignment="Right" Width="22" Height="22" Padding="0" 
+                                                    VerticalContentAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="White" 
+                                                    Background="{StaticResource PrimaryBrush}" BorderThickness="0" Style="{StaticResource PrimaryButton}">
+                                                <Button.Resources>
+                                                    <Style TargetType="Border"><Setter Property="CornerRadius" Value="11"/></Style>
+                                                </Button.Resources>
+                                            </Button>
+                                        </DockPanel>
+                                        <ListBox x:Name="ClassesList" SelectionChanged="ClassesList_SelectionChanged" SelectedValuePath="Id" 
+                                                 Background="Transparent" BorderThickness="0">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="Padding" Value="12,12"/>
+                                                    <Setter Property="Margin" Value="0,2"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ListBoxItem">
+                                                                <Border x:Name="border" CornerRadius="8" Background="Transparent" Padding="{TemplateBinding Padding}">
+                                                                    <ContentPresenter/>
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsSelected" Value="True">
+                                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryLightBrush}"/>
+                                                                        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                                                    </Trigger>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter TargetName="border" Property="Background" Value="#F1F5F9"/>
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <TextBlock Text="{Binding TotalHours, StringFormat=' ({0}s)'}" DockPanel.Dock="Right" Foreground="Gray" FontSize="11" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                            <ListBox.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Dersleri Kopyala" Click="CopyClassLessons_Click"/>
+                                                    <MenuItem Header="Dersleri Yapıştır" Click="PasteClassLessons_Click"/>
+                                                    <Separator/>
+                                                    <MenuItem Header="Sınıfı Sil" Click="DeleteClass_Click"/>
+                                                </ContextMenu>
+                                            </ListBox.ContextMenu>
+                                        </ListBox>
+                                    </DockPanel>
+                                </Border>
+                                
+                                <!-- Column 2: Tabbed Details -->
+                                <Border Grid.Column="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="{StaticResource CardCornerRadius}">
+                                    <TabControl Background="Transparent" BorderThickness="0">
+                                        <TabControl.ItemContainerStyle>
+                                            <Style TargetType="TabItem">
+                                                <Setter Property="FontSize" Value="14"/>
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                                <Setter Property="Padding" Value="20,10"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="TabItem">
+                                                            <Grid>
+                                                                <Border x:Name="Border" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,1" Padding="{TemplateBinding Padding}">
+                                                                    <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header"/>
+                                                                </Border>
+                                                                <Rectangle x:Name="Underline" Height="3" VerticalAlignment="Bottom" Fill="Transparent"/>
+                                                            </Grid>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                                                    <Setter TargetName="Underline" Property="Fill" Value="{StaticResource PrimaryBrush}"/>
+                                                                    <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                                                                    <Setter TargetName="Border" Property="BorderThickness" Value="0,0,1,0"/>
+                                                                </Trigger>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="{StaticResource PrimaryDarkBrush}"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </TabControl.ItemContainerStyle>
+                                        
+                                        <!-- Tab 1: Atamalar -->
+                                        <TabItem Header="📖 Müfredat ve Atamalar">
+                                            <Grid Margin="16">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="280"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <!-- Ders Havuzu -->
+                                                <Border Grid.Column="0" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="12" Margin="0,0,16,0" CornerRadius="8">
+                                                    <DockPanel>
+                                                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                                                            <TextBlock Text="Ders Havuzu" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                                                            <TextBox x:Name="ClassLessonSearchBox" Padding="8,4" Height="28" FontSize="11" Width="140" 
+                                                                     HorizontalAlignment="Right"
+                                                                     TextChanged="ClassLessonSearch_TextChanged" VerticalContentAlignment="Center"
+                                                                     Tag="Ders ara..."/>
+                                                        </DockPanel>
+                                                        <ListBox x:Name="LessonPoolList" Background="Transparent" BorderThickness="0">
+                                                            <ListBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <DockPanel Margin="0,4">
+                                                                        <Button DockPanel.Dock="Left" Content="+" Tag="{Binding Id}" Click="AddLessonToClass_Click" 
+                                                                                VerticalAlignment="Center" Width="24" Height="24" Padding="0" Margin="0,0,10,0"
+                                                                                FontSize="14" FontWeight="Bold" Background="#10B981" Foreground="White" BorderThickness="0">
+                                                                            <Button.Resources>
+                                                                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="12"/></Style>
+                                                                            </Button.Resources>
+                                                                        </Button>
+                                                                        <StackPanel VerticalAlignment="Center">
+                                                                            <StackPanel Orientation="Horizontal">
+                                                                                <TextBlock Text="{Binding ShortName}" FontWeight="SemiBold" FontSize="12"/>
+                                                                                <Border Background="#F1F5F9" CornerRadius="4" Padding="4,1" Margin="8,0,0,0">
+                                                                                    <TextBlock Text="{Binding Code}" FontSize="9" Foreground="#475569" FontWeight="Bold"/>
+                                                                                </Border>
+                                                                            </StackPanel>
+                                                                            <TextBlock Text="{Binding DefaultBlock, StringFormat='Blok: {0}'}" FontSize="10" Foreground="Gray"/>
+                                                                        </StackPanel>
+                                                                    </DockPanel>
+                                                                </DataTemplate>
+                                                            </ListBox.ItemTemplate>
+                                                        </ListBox>
+                                                    </DockPanel>
+                                                </Border>
+                                                
+                                                <!-- Tanımlı Dersler -->
+                                                <Border Grid.Column="1" Background="Transparent" Padding="0">
+                                                    <DockPanel>
+                                                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                                                            <TextBlock Text="📚 Tanımlı Dersler ve Öğretmenler" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                                                            <CheckBox x:Name="CheckAutoAssignTeacher" Content="Otomatik Ata" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="True" FontSize="11"/>
+                                                        </DockPanel>
+                                                        
+                                                        <TextBlock x:Name="ClassAssignmentHint" Text="Lütfen soldan bir sınıf seçin" 
+                                                                   Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40,0,0"/>
+
+                                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                                            <StackPanel x:Name="ClassLessonsContainer" Margin="0,0,5,0"/>
+                                                        </ScrollViewer>
+                                                    </DockPanel>
+                                                </Border>
+                                            </Grid>
+                                        </TabItem>
+                                        
+                                        <!-- Tab 2: Zaman Tablosu -->
+                                        <TabItem Header="📅 Zaman Tablosu (Kısıtlamalar)">
+                                            <Border x:Name="ClassTimetableArea" Background="Transparent" Padding="16">
+                                                <StackPanel>
+                                                    <DockPanel Margin="0,0,0,16">
+                                                        <TextBlock Text="Sınıfın Ders Görebileceği Saatler" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                                                        <CheckBox x:Name="CheckClassHideWeekend" Content="Haftasonunu Gizle" IsChecked="False" 
+                                                                  HorizontalAlignment="Right" VerticalContentAlignment="Center"
+                                                                  Click="CheckClassHideWeekend_Click" FontSize="12"/>
+                                                    </DockPanel>
+                                                    <Border Background="{DynamicResource SurfaceAltBrush}" Padding="15" CornerRadius="8" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                                        <StackPanel x:Name="ClassTimetableGrid"/>
+                                                    </Border>
+                                                    <TextBlock Text="💡 İpucu: Hücrelere çift tıklayarak ders saatlerini kapatabilir veya açabilirsiniz." 
+                                                               FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,12,0,0" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </TabItem>
+                                    </TabControl>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    
+
+                    <!-- Ek Ders Panel -->
+                    <!-- Ek Ders Panel -->
+                    <Grid x:Name="EkDersPanel" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="15">
+                            <DockPanel LastChildFill="False">
+                                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Ek Ders Modülü" FontSize="18" FontWeight="Bold" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                                    
+                                    <ComboBox x:Name="EkDersYearCombo" Width="80" Margin="0,0,10,0" SelectionChanged="EkDersYearCombo_SelectionChanged"/>
+                                    <ComboBox x:Name="EkDersMonthCombo" Width="100" Margin="0,0,20,0" SelectionChanged="EkDersMonthCombo_SelectionChanged"/>
+                                    
+                                    <!-- Listele button removed for auto-refresh -->
+                                    
+                                    <ComboBox x:Name="EkDersViewModeCombo" Width="120" Margin="0,0,10,0" SelectionChanged="EkDersViewMode_SelectionChanged">
+                                        <ComboBoxItem Content="Detay (Çarşaf)" IsSelected="True" Tag="Detay"/>
+                                        <ComboBoxItem Content="Toplu Liste" Tag="Toplu"/>
+                                    </ComboBox>
+                                    
+                                    <ComboBox x:Name="EkDersTeacherCombo" Width="200" Margin="0,0,10,0" SelectionChanged="EkDersTeacherCombo_SelectionChanged" Visibility="Visible"/>
+                                </StackPanel>
+                                
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Button Content="Tümünü Hesapla" Click="CalcAllEkDers_Click" Style="{StaticResource PrimaryButton}" Padding="10,5" Margin="0,0,10,0">
+                                         <Button.Resources>
+                                            <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
+                                        </Button.Resources>
+                                    </Button>
+                                    <Button Content="Kaydet" Click="SaveEkDers_Click" Style="{StaticResource SuccessButton}" Padding="20,5" Margin="0,0,10,0" FontWeight="Bold">
+                                         <Button.Resources>
+                                            <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
+                                        </Button.Resources>
+                                    </Button>
+                                    <Button Content="Excel'e Aktar" Click="ExportEkDers_Click" Padding="10,5"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                        
+                        <!-- Content Area -->
+                        <Grid Grid.Row="1" Background="{DynamicResource SurfaceBrush}">
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/> <!-- Fixed Header Section -->
+                                        <RowDefinition Height="*"/>    <!-- Scrollable Data Section -->
+                                    </Grid.RowDefinitions>
+                                    
+                                    <StackPanel x:Name="EkDersHeaderContainer" Grid.Row="0" Margin="20,20,20,0"/>
+                                    
+                                    <ScrollViewer x:Name="EkDersDataScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                        <StackPanel x:Name="EkDersMainGridContainer" Margin="20,0,20,20"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </ScrollViewer>
+                            
+                            <TextBlock x:Name="EkDersSelectHint" Text="Lütfen bekleyiniz..." 
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#9CA3AF" FontSize="16" Visibility="Visible"/>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Reports Panel -->
+                    <Grid x:Name="ReportsPanel" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Header -->
+                        <TextBlock Text="Rapor İşlemleri" FontSize="28" FontWeight="Bold" 
+                                   HorizontalAlignment="Center" Margin="0,0,0,40" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        
+                        <!-- Filter Bar -->
+                        <Border Grid.Row="1" Style="{StaticResource CardBorder}" Padding="20" Margin="0,0,0,40">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Margin="0,0,30,0">
+                                    <TextBlock Text="Evrak Kayıt No" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                                    <TextBox x:Name="ReportDocumentNo" Width="200"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Tarih" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                                    <TextBox x:Name="ReportDate" Width="150"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- Content -->
+                        <ScrollViewer x:Name="ReportsScrollViewer" Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="0,0,0,40">
+                                
+                                <!-- Section 1: Ders Programları -->
+                                <TextBlock Text="Ders Programları" FontSize="18" FontWeight="SemiBold" Foreground="#374151" Margin="0,0,0,20"/>
+                                
+                                <Grid Margin="0,0,0,30">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/> <!-- Row 0: Programlar 1-2 -->
+                                        <RowDefinition Height="20"/>   <!-- Row 1: Spacer -->
+                                        <RowDefinition Height="Auto"/> <!-- Row 2: Programlar 3-4 -->
+                                        <RowDefinition Height="20"/>   <!-- Row 3: Spacer -->
+                                        <RowDefinition Height="Auto"/> <!-- Row 4: Programlar 5 (e-Okul) -->
+                                    </Grid.RowDefinitions>
+                                    
+                                    <!-- Card 1: Öğretmen Programı -->
+                                    <Button Grid.Row="0" Grid.Column="0" Click="Report_TeacherSchedule_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,15,0">
+                                                            <TextBlock Text="📇" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Öğretmen Programı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Haftalık dağılım" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                    <!-- Card 2: Sınıf Programı -->
+                                    <Button Grid.Row="0" Grid.Column="2" Click="Report_ClassSchedule_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource SuccessLightBrush}" Margin="0,0,15,0">
+                                                            <TextBlock Text="🏫" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource SuccessBrush}"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Sınıf Programı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Haftalık dağılım" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                    <!-- Card 3: Öğrt. Günlük Çarşaf -->
+                                    <Button Grid.Row="2" Grid.Column="0" Click="Report_TeacherDaily_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource WarningLightBrush}" Margin="0,0,15,0">
+                                                            <TextBlock Text="📄" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource WarningBrush}"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Öğretmen Çarşaf Programı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Günlük toplu liste" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                    <!-- Card 4: Sınıf Günlük Çarşaf -->
+                                    <Button Grid.Row="2" Grid.Column="2" Click="Report_ClassDaily_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="#FAF5FF" Margin="0,0,15,0">
+                                                            <TextBlock Text="📑" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#A855F7"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Sınıf Çarşaf Programı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Günlük toplu liste" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+
+                                    <!-- Card 5: e-Okula Aktarım Dosyası -->
+                                    <Button Grid.Row="4" Grid.Column="2" Click="Report_EOkulExport_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100" Margin="0">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="#ECFDF5" Margin="0,0,15,0">
+                                                            <TextBlock Text="📤" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#10B981"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="e-Okul Aktarım Dosyası" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Dersleri e-Okula yüklemek için dosya hazırla" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+
+                                    <!-- Card 6: Öğretmen Günlük Çarşaf -->
+                                    <Button Grid.Row="4" Grid.Column="0" Click="Report_TeacherDailySheet_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100" Margin="0">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="#EFF6FF" Margin="0,0,15,0">
+                                                            <TextBlock Text="📅" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#3B82F6"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Öğretmen Günlük Çarşaf" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Her gün için ayrı liste" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+                                
+                                <!-- Section 2: Listeler ve Çizelgeler -->
+                                <TextBlock Text="Listeler ve Çizelgeler" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,20"/>
+                                
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <!-- Nöbet Çizelgesi -->
+                                    <Button Grid.Row="0" Grid.Column="0" Click="Report_DutyList_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource ErrorLightBrush}" Margin="0,0,15,0">
+                                                            <TextBlock Text="🛡️" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ErrorBrush}"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Nöbet Çizelgesi" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Günlük nöbet yerleri" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                    <!-- Rehber Öğretmenler -->
+                                    <Button Grid.Row="0" Grid.Column="2" Click="Report_Guidance_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,15,0">
+                                                            <TextBlock Text="🔍" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Rehber Öğretmenler" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Sınıf rehber listesi" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                    <!-- Eğitsel Kulüpler -->
+                                    <Button Grid.Row="2" Grid.Column="0" Click="Report_Clubs_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,15,0">
+                                                            <TextBlock Text="🎵" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Eğitsel Kulüpler" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Öğretmen kulüp listesi" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                    <!-- Ders Atama Listesi -->
+                                    <Button Grid.Row="2" Grid.Column="2" Click="Report_Assignments_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource WarningLightBrush}" Margin="0,0,15,0">
+                                                            <TextBlock Text="📄" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource WarningBrush}"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Ders Atama Listesi" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Öğretmen-Ders-Saat" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                    <!-- Atanmamış Dersler -->
+                                    <Button Grid.Row="4" Grid.Column="0" Click="Report_Unassigned_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource ErrorLightBrush}" Margin="0,0,15,0">
+                                                            <TextBlock Text="⚠️" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ErrorBrush}"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Atanmamış Dersler" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Öğretmensiz dersler" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                    <!-- Seçmeli/Zorunlu Oranı -->
+                                    <Button Grid.Row="4" Grid.Column="2" Click="Report_ElectiveRatio_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource PrimaryLightBrush}" Margin="0,0,15,0">
+                                                            <TextBlock Text="📊" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Seçmeli/Zorunlu Oranı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Ders türü dağılımı" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                    <!-- Ortak Mekan Programı -->
+                                    <Button Grid.Row="6" Grid.Column="0" Click="Report_RoomSchedule_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource InfoLightBrush}" Margin="0,0,15,0">
+                                                            <TextBlock Text="🏫" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource InfoBrush}"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Ortak Mekan Programı" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Laboratuvar vb. programları" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                    <!-- Birlikte Derse Girenler -->
+                                    <Button Grid.Row="6" Grid.Column="2" Click="Report_JointTeachers_Click" Background="{DynamicResource SurfaceBrush}" BorderThickness="0" Height="100">
+                                         <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CardCornerRadius}" Padding="20" Cursor="Hand">
+                                                    <Border.Effect><DropShadowEffect Color="#0F172A" BlurRadius="15" ShadowDepth="4" Opacity="0.04"/></Border.Effect>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" Background="#F0F9FF" Margin="0,0,15,0">
+                                                            <TextBlock Text="👥" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0284C7"/>
+                                                        </Border>
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <TextBlock Text="Ortak Ders Öğretmenleri" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                            <TextBlock Text="Birlikte derse girenler" Foreground="{DynamicResource TextMutedBrush}" FontSize="13"/>
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2" Text="›" FontSize="24" Foreground="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    
+                                </Grid>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
