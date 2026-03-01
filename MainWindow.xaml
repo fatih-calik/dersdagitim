@@ -13,11 +13,16 @@
         <!-- License Overlay -->
         <Grid x:Name="LicenseOverlay" Visibility="Collapsed" Background="{DynamicResource BackgroundBrush}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="400">
-                <TextBlock Text="🔐 Lisans Gerekli" FontSize="24" FontWeight="Bold" 
+                <TextBox Text="Lisans alımı için iletişime geçin: aras_a@hotmail.com"
+                         FontSize="13" FontWeight="Bold" Foreground="#1B1F3B"
+                         HorizontalAlignment="Center" Margin="0,0,0,15"
+                         IsReadOnly="True" BorderThickness="0" Background="Transparent"
+                         TextAlignment="Center" Cursor="Arrow"/>
+                <TextBlock Text="🔐 Lisans Gerekli" FontSize="24" FontWeight="Bold"
                            HorizontalAlignment="Center" Margin="0,0,0,20"/>
                 
                 <TextBlock Text="Lütfen okul adınızı giriniz:" Margin="0,0,0,5"/>
-                <TextBox x:Name="SchoolNameInput" Padding="8" Margin="0,0,0,15"/>
+                <TextBox x:Name="SchoolNameInput" Text="aras_a@hotmail.com" Padding="8" Margin="0,0,0,15"/>
                 
                 <TextBlock Text="İstek Kodu:" Margin="0,0,0,5"/>
                 <TextBox x:Name="RequestCodeBox" IsReadOnly="True" Padding="8" Margin="0,0,0,5"/>
@@ -390,7 +395,12 @@
                         <!-- Header -->
                         <Grid Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="Okul Ayarları" FontSize="20" FontWeight="Bold"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Okul Ayarları" FontSize="20" FontWeight="Bold"/>
+                                    <Button x:Name="HelpVideoButton" Content="🎬 Kullanım Videosu" Click="HelpVideo_Click"
+                                            Margin="20,0,0,0" Padding="10,4" FontSize="12" VerticalAlignment="Center"
+                                            Style="{StaticResource PrimaryButton}" Cursor="Hand"/>
+                                </StackPanel>
                                 <TextBlock Text="Okul bilgilerini, zaman tablosunu ve tanımları yönetin" Foreground="Gray"/>
                             </StackPanel>
                             <Button Content="✓ Ayarları Kaydet" Click="SaveSchoolInfo_Click" 
@@ -958,7 +968,7 @@
                                         <!-- Action Buttons -->
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                             <Button Content="Kaydet" Click="SaveTeacher_Click" Width="80" Margin="6,0" Style="{StaticResource PrimaryButton}"/>
-                                            <Button Content="Sil" Click="DeleteTeacher_Click" Width="60" Margin="6,0" Background="#EF4444" Foreground="White" BorderThickness="0"/>
+                                            <Button Content="Sil" Click="DeleteTeacher_Click" Width="60" Margin="6,0" Style="{StaticResource RedButton}"/>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
@@ -1687,16 +1697,10 @@
                                         </Button.Resources>
                                     </Button>
                                     <Button Content="Excel'e Aktar" Click="ExportEkDers_Click" Padding="10,5"/>
-                                    <Button Content="📋 İcmal Çizelgesi" Click="ExportIcmal_Click" Padding="10,5" Margin="5,0,0,0" Background="#EFF6FF" Foreground="#1D4ED8" FontWeight="SemiBold">
-                                        <Button.Resources>
-                                            <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
-                                        </Button.Resources>
-                                    </Button>
-                                    <Button Content="📊 Ayrıntı Çizelgesi" Click="ExportAyrinti_Click" Padding="10,5" Margin="5,0,0,0" Background="#F0FDF4" Foreground="#15803D" FontWeight="SemiBold">
-                                        <Button.Resources>
-                                            <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
-                                        </Button.Resources>
-                                    </Button>
+                                    <Button Content="📋 İcmal Çizelgesi" Click="ExportIcmal_Click" Padding="10,5" Margin="5,0,0,0" FontWeight="SemiBold"
+                                            Style="{StaticResource LightBlueButton}"/>
+                                    <Button Content="📊 Ayrıntı Çizelgesi" Click="ExportAyrinti_Click" Padding="10,5" Margin="5,0,0,0" FontWeight="SemiBold"
+                                            Style="{StaticResource LightGreenButton}"/>
                                 </StackPanel>
                             </DockPanel>
                         </Border>

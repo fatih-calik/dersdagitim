@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -995,6 +998,40 @@ public partial class MainWindow : Window
         if (e.Key == Key.Enter) AddBuilding_Click(sender, e);
     }
     
+    private async void HelpVideo_Click(object sender, RoutedEventArgs e)
+    {
+        var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        var videoPath = Path.Combine(desktopPath, "DersDagitim_Yardim.mp4");
+
+        if (File.Exists(videoPath))
+        {
+            Process.Start(new ProcessStartInfo(videoPath) { UseShellExecute = true });
+            return;
+        }
+
+        try
+        {
+            HelpVideoButton.IsEnabled = false;
+            HelpVideoButton.Content = "⏳ İndiriliyor...";
+
+            var url = "https://github.com/fatih-calik/dersdagitim/raw/main/yardim.mp4";
+            using var client = new HttpClient();
+            var bytes = await client.GetByteArrayAsync(url);
+            await File.WriteAllBytesAsync(videoPath, bytes);
+
+            HelpVideoButton.Content = "🎬 Kullanım Videosu";
+            HelpVideoButton.IsEnabled = true;
+
+            Process.Start(new ProcessStartInfo(videoPath) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            HelpVideoButton.Content = "🎬 Kullanım Videosu";
+            HelpVideoButton.IsEnabled = true;
+            MessageBox.Show($"Video indirilemedi: {ex.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
     private void SaveSchoolInfo_Click(object sender, RoutedEventArgs e)
     {
         try

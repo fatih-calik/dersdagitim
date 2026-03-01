@@ -1,0 +1,60 @@
+﻿<Window x:Class="LicenseGenerator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Ders Dağıtım - Lisans Üretici" Height="600" Width="500" MinWidth="500" MinHeight="600" WindowStartupLocation="CenterScreen">
+    <Grid Margin="20">
+        <StackPanel>
+            <TextBlock Text="Ders Dağıtım - Lisans Üretici" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+            <!-- Input Section -->
+            <GroupBox Header="Giriş Bilgileri" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Okul Adı" Margin="0,5,0,2"/>
+                    <TextBox x:Name="txtSchoolName" Padding="5"/>
+
+                    <TextBlock Text="İstek Kodu (Kullanıcıdan)" Margin="0,10,0,2"/>
+                    <TextBox x:Name="txtRequestCode" Padding="5"/>
+
+                    <TextBlock Text="Geçerlilik Yılı (Örn: 2025)" Margin="0,10,0,2"/>
+                    <TextBox x:Name="txtYear" Text="2025" Padding="5"/>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Action Button -->
+            <Button x:Name="btnGenerate" Content="Şifreli Lisans Kodu Üret" 
+                    Margin="0,20,0,0" Padding="10" Background="#007AFF" Foreground="White" FontWeight="Bold"
+                    Click="BtnGenerate_Click"/>
+                    
+            <Button x:Name="btnGenerateDemo" Content="Demo Lisansı Üret (DEMO:BUGUN:0)" 
+                    Margin="0,10,0,0" Padding="10" Background="#5856D6" Foreground="White" FontWeight="Bold"
+                    Click="BtnGenerateDemo_Click"/>
+
+            <!-- Status Message -->
+            <TextBlock x:Name="txtMessage" Text="" Margin="0,10,0,0" FontWeight="Medium" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+
+            <!-- Output Section -->
+            <StackPanel x:Name="pnlOutput" Visibility="Collapsed" Margin="0,20,0,0" Background="#F0F0F0">
+                <Border CornerRadius="10" Padding="10" BorderBrush="Gray" BorderThickness="0">
+                    <StackPanel>
+                        <TextBlock Text="Üretilen Lisans Kodu (Kopyalanabilir):" FontWeight="Bold" FontSize="11" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtGeneratedCode" Height="100" TextWrapping="Wrap" FontFamily="Consolas" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+
+                        <Grid Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Button Grid.Column="0" Content="Kodu Kopyala" Click="BtnCopy_Click" Padding="5"/>
+                            <Button Grid.Column="2" Content="Dosya Olarak Kaydet (ls.clk)" Click="BtnSave_Click" Padding="5"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

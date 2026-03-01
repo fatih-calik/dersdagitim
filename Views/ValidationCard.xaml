@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="DersDagitim.Views.ValidationCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="400">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <Style TargetType="Border" x:Key="CardStyle">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Color="#000000" Opacity="0.05"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Style="{StaticResource CardStyle}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+        <StackPanel>
+            <Grid Cursor="Hand" MouseLeftButtonDown="Header_MouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Icon -->
+                <Border Width="44" Height="44" CornerRadius="22" Background="{DynamicResource SurfaceAltBrush}" x:Name="IconBorder">
+                    <TextBlock x:Name="TxtIcon" Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </Border>
+                
+                <!-- Title & Details -->
+                <StackPanel Grid.Column="1" Margin="15,0">
+                    <TextBlock x:Name="TxtTitle" Text="Title" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock x:Name="TxtDetails" Text="Details..." FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                </StackPanel>
+                
+                <!-- Percentage -->
+                <TextBlock Grid.Column="2" x:Name="TxtPercentage" Text="0%" FontWeight="Bold" FontSize="18" VerticalAlignment="Center" Margin="0,0,15,0" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                
+                <!-- Chevron -->
+                <TextBlock Grid.Column="3" x:Name="TxtChevron" Text="&#xE70D;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
+            </Grid>
+            
+            <!-- Progress Bar -->
+            <ProgressBar x:Name="PbStatus" Height="4" Margin="0,15,0,0" BorderThickness="0" Background="{DynamicResource SurfaceAltBrush}"/>
+            
+            <!-- Issues List -->
+            <StackPanel x:Name="IssuesPanel" Visibility="Collapsed" Margin="0,15,0,0">
+                <TextBlock Text="Tespit Edilen Sorunlar:" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,5"/>
+                <ItemsControl x:Name="IssuesList">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="0,4">
+                                <TextBlock Text="&#xE783;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource WarningBrush}" Margin="0,2,8,0" FontSize="12"/>
+                                <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

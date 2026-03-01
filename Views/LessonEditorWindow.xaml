@@ -1,0 +1,60 @@
+﻿<Window x:Class="DersDagitim.Views.LessonEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ders Düzenle" Height="500" Width="400"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="#F9FAFB">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="0,5,0,15"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Text="Ders Bilgileri" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
+        
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="Ders Adı"/>
+            <TextBox x:Name="InputsName"/>
+            
+            <TextBlock Text="Ders Kodu"/>
+            <TextBox x:Name="InputsCode"/>
+            
+            <TextBlock Text="Blok Yapısı (Örn: 2+2+1)"/>
+            <TextBox x:Name="InputsBlock" Text="2" ToolTip="Yeni ders: 2+2+1 gibi ifadeler yazabilirsiniz. Düzenleme modunda değiştirilemez."/>
+            
+
+            
+            <TextBlock Text="Sabah Önceliği (0-10)"/>
+            <Slider x:Name="InputsPriority" Minimum="0" Maximum="10" Value="0" 
+                    TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,5,0,5"/>
+            <TextBlock Text="{Binding Value, ElementName=InputsPriority}" HorizontalAlignment="Right" Foreground="Gray" Margin="0,-25,0,0"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="İptal" IsCancel="True" Padding="15,8" Background="Transparent" BorderThickness="0" Margin="0,0,10,0"/>
+            <Button Content="Kaydet" Click="Save_Click" Padding="20,8" Style="{StaticResource PrimaryButton}">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="6"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

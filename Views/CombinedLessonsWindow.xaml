@@ -1,0 +1,237 @@
+﻿<Window x:Class="DersDagitim.Views.CombinedLessonsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Ders Birleştirme (Kardeş Dersler) Yönetimi" Height="650" Width="1100" WindowStartupLocation="CenterScreen">
+    
+    <Window.Resources>
+        <!-- Card Style -->
+        <Style x:Key="CardBorder" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="0,2,0,2"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#3B82F6"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Orange Header Style -->
+        <Style x:Key="HeaderBorder" TargetType="Border">
+            <Setter Property="Background" Value="#F97316"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="CornerRadius" Value="6,6,0,0"/>
+        </Style>
+        <Style x:Key="HeaderText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        
+         <!-- Gray Header Style -->
+        <Style x:Key="GrayHeaderBorder" TargetType="Border">
+            <Setter Property="Background" Value="#64748B"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="CornerRadius" Value="6,6,0,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="#F3F4F6" Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- 1. Groups List (ORANGE) -->
+        <Grid Grid.Column="0" Margin="0,0,10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <Border Grid.Row="0" Style="{StaticResource HeaderBorder}">
+                <DockPanel>
+                    <TextBlock Text="1. GRUPLAR" Style="{StaticResource HeaderText}"/>
+                </DockPanel>
+            </Border>
+            
+            <!-- Toolbar -->
+            <Border Grid.Row="1" Background="White" Padding="5" BorderBrush="#E5E7EB" BorderThickness="1,0,1,1">
+                <Button Content="+ YENİ GRUP" Height="30" Click="NewGroup_Click" FontWeight="Bold" Style="{StaticResource OrangeButton}"/>
+            </Border>
+
+            <ListBox x:Name="GroupsList" Grid.Row="2" SelectionChanged="GroupsList_SelectionChanged" 
+                     BorderThickness="1,0,1,1" BorderBrush="#E5E7EB" Background="White">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardBorder}" Background="#FFF7ED" BorderBrush="#FDBA74">
+                            <DockPanel>
+                                <TextBlock Text="Dosya" Margin="0,0,8,0" Foreground="#F97316" VerticalAlignment="Center"/>
+                                <TextBox Text="{Binding Ad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         FontWeight="SemiBold" Foreground="#9A3412" Background="Transparent" 
+                                         BorderThickness="0" VerticalAlignment="Center"
+                                         LostFocus="GroupName_LostFocus"
+                                         Tag="{Binding Id}"/>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                 <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Grubu Sil" Click="DeleteGroup_Click"/>
+                        <MenuItem Header="Yeniden Adlandır" Click="RenameGroup_Click"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+        </Grid>
+
+        <!-- 2. Classes List (GRAY) -->
+        <Grid Grid.Column="1" Margin="0,0,10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Style="{StaticResource GrayHeaderBorder}">
+                <TextBlock Text="2. SINIFLAR" Style="{StaticResource HeaderText}"/>
+            </Border>
+
+            <ListBox x:Name="ClassesList" Grid.Row="1" SelectionChanged="ClassesList_SelectionChanged"
+                     BorderThickness="1,0,1,1" BorderBrush="#E5E7EB" Background="White">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardBorder}">
+                            <DockPanel>
+                                <TextBlock Text="Sınıf" Margin="0,0,8,0" Foreground="#64748B"/>
+                                <TextBlock Text="{Binding Name}" FontWeight="Medium"/>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+        <!-- 3. Class Lessons (SOURCE - Draggable) -->
+        <Grid Grid.Column="2" Margin="0,0,10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Style="{StaticResource GrayHeaderBorder}">
+                <TextBlock Text="3. DERS LİSTESİ (Sürükle)" Style="{StaticResource HeaderText}"/>
+            </Border>
+
+            <ListBox x:Name="ClassLessonsList" Grid.Row="1" 
+                     BorderThickness="1,0,1,1" BorderBrush="#E5E7EB" Background="White"
+                     PreviewMouseLeftButtonDown="ClassLessonsList_PreviewMouseLeftButtonDown">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border x:Name="Card" Style="{StaticResource CardBorder}" Cursor="Hand" Padding="8,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock x:Name="LinkIcon" Grid.Column="0" Text="(Link)" Margin="0,0,5,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+                                <TextBlock Grid.Column="1" Text="{Binding DisplayName}" FontWeight="SemiBold" FontSize="12" Foreground="#1E293B" VerticalAlignment="Center"/>
+                                
+                                <Border Grid.Column="2" Background="#DBEAFE" CornerRadius="4" Padding="4,1" VerticalAlignment="Center" Margin="5,0,0,0">
+                                    <TextBlock Text="{Binding TotalHours, StringFormat='{}{0}s'}" FontSize="10" FontWeight="Bold" Foreground="#1E40AF"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsInsideGroup}" Value="True">
+                                <Setter TargetName="Card" Property="Background" Value="#FEE2E2"/>
+                                <Setter TargetName="Card" Property="BorderBrush" Value="#FECACA"/>
+                                <Setter TargetName="Card" Property="Opacity" Value="0.9"/>
+                                <Setter TargetName="Card" Property="Cursor" Value="Arrow"/>
+                                <Setter TargetName="LinkIcon" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="Card" Property="ToolTip">
+                                    <Setter.Value>
+                                        <TextBlock Text="{Binding GroupNames, StringFormat='Bağlı Gruplar: {0}'}" FontWeight="Bold"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsMultiGroup}" Value="True">
+                                <Setter TargetName="Card" Property="Background" Value="#FCA5A5"/>
+                                <Setter TargetName="Card" Property="BorderBrush" Value="#EF4444"/>
+                                <Setter TargetName="LinkIcon" Property="Text" Value="(!)"/>
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Seçili Gruba Ekle" Click="AddLessonToGroup_Click"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+        </Grid>
+
+        <!-- 4. Group Contents (TARGET - Droppable) -->
+        <Grid Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Style="{StaticResource HeaderBorder}">
+                <DockPanel>
+                    <TextBlock Text="4. BİRLEŞİK DERSLER (Bırak)" Style="{StaticResource HeaderText}"/>
+                    <TextBlock x:Name="TxtSelectedGroup" Text="(Grup Seçin)" Foreground="White" Opacity="0.8" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                </DockPanel>
+            </Border>
+
+            <ListBox x:Name="GroupLessonsList" Grid.Row="1" AllowDrop="True" Drop="GroupLessonsList_Drop" DragOver="GroupLessonsList_DragOver"
+                     BorderThickness="1,0,1,1" BorderBrush="#E5E7EB" Background="White">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="White" CornerRadius="6" Padding="10" Margin="0,2" BorderBrush="#FDBA74" BorderThickness="1">
+                             <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <!-- Link Icon indicating connection -->
+                                <Border Grid.Column="0" Width="4" Background="#F97316" Margin="0,0,10,0" CornerRadius="2"/>
+                                
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding ClassName}" FontWeight="Bold" Foreground="#9A3412" FontSize="14"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding LessonCode}" FontWeight="SemiBold"/>
+                                        <TextBlock Text=" - "/>
+                                        <TextBlock Text="{Binding LessonName}" Foreground="#64748B"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                
+                                <Border Grid.Column="2" Background="#FFEDD5" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding TotalHours, StringFormat='{}{0} Saat'}" FontWeight="Bold" Foreground="#C2410C"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Gruptan Çıkar (Sil)" Click="RemoveFromGroup_Click"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,226 @@
+﻿<Window x:Class="DersDagitim.Views.DetailedAssignmentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Detaylı Atama ve Blok Analizi" Height="800" Width="1000"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Background="#F8FAFC">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="20,15">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="#2563EB" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                <StackPanel>
+                    <TextBlock Text="Detaylı Veri Analizi" FontSize="20" FontWeight="Bold" Foreground="#1E293B"/>
+                    <TextBlock Text="Sınıf > Ders > Atama > Blok hiyerarşisini inceleyebilirsiniz." FontSize="12" Foreground="#64748B"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" Padding="20">
+            <StackPanel>
+                <ItemsControl x:Name="ClassItemsControl">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                        <!-- Class Card -->
+                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12" Margin="0,0,0,20" Padding="20">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                    <Border Background="#EFF6FF" CornerRadius="6" Padding="10,5" Margin="0,0,10,0">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="#2563EB" FontSize="16"/>
+                                    </Border>
+                                    <TextBlock Text="{Binding TotalHours, StringFormat='{}Toplam {0} Saat'}" VerticalAlignment="Center" Foreground="#64748B" FontSize="13"/>
+                                </StackPanel>
+
+                                <!-- Lessons -->
+                                <ItemsControl ItemsSource="{Binding Lessons}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="#F1F5F9" BorderThickness="0,1,0,0" Padding="0,10">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="250"/> <!-- Lesson Info -->
+                                                        <ColumnDefinition Width="250"/> <!-- Assignments -->
+                                                        <ColumnDefinition Width="*"/>   <!-- Blocks -->
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <!-- 1. Lesson Info -->
+                                                    <StackPanel Grid.Column="0" VerticalAlignment="Top">
+                                                        <TextBlock Text="{Binding LessonName}" FontWeight="SemiBold" FontSize="14" Foreground="#0F172A"/>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding LessonCode}" FontSize="12" Foreground="#64748B"/>
+                                                            <TextBlock Text=" • " Foreground="#CBD5E1"/>
+                                                            <TextBlock Text="{Binding TotalHours, StringFormat='{}{0} Saat'}" FontSize="12" Foreground="#64748B"/>
+                                                            <TextBlock Text=" (Kardeş)" Foreground="#EF4444" FontSize="11" Margin="5,0,0,0"
+                                                                       Visibility="{Binding IsKardes, Converter={StaticResource BoolToVis}}"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+
+                                                    <!-- 2. Assignments (Atamalar) -->
+                                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Assignments}" Margin="10,0">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Border Background="#F9FAFB" CornerRadius="4" Padding="8,4" Margin="0,0,0,4">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="10" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="#64748B"/>
+                                                                        <TextBlock Text="{Binding TeacherName}" FontSize="12" Foreground="#334155" FontWeight="Medium"/>
+                                                                        <TextBlock Text="{Binding AssignedHours, StringFormat=' ({0}s)'}" FontSize="11" Foreground="#94A3B8"/>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+
+                                                    <!-- 3. Blocks (Dağıtım Blokları) -->
+                                                    <ItemsControl Grid.Column="2" ItemsSource="{Binding Blocks}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="6,4" Margin="0,0,5,5" ToolTip="{Binding Status}">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <Border Background="#F1F5F9" CornerRadius="3" Padding="4,2">
+                                                                            <TextBlock Text="{Binding Duration, StringFormat='{}{0}'}" FontSize="10" FontWeight="Bold" Foreground="#475569"/>
+                                                                        </Border>
+                                                                        <TextBlock Text="" FontFamily="Segoe MDL2 Assets" 
+                                                                                   Visibility="{Binding IsPlaced, Converter={StaticResource BoolToVis}}" 
+                                                                                   Foreground="#10B981" Margin="5,0,0,0" FontSize="10" VerticalAlignment="Center"/>
+                                                                        <TextBlock FontSize="10" Margin="5,0,0,0">
+                                                                            <TextBlock.Style>
+                                                                                <Style TargetType="TextBlock">
+                                                                                    <Setter Property="Text" Value="Bekliyor"/>
+                                                                                    <Setter Property="Foreground" Value="#10B981"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding Day}" Value="0">
+                                                                                            <Setter Property="Text" Value="Yerleşmemiş"/>
+                                                                                            <Setter Property="Foreground" Value="#EF4444"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </TextBlock.Style>
+                                                                        </TextBlock>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Common Rooms Section -->
+            <TextBlock Text="Ortak Mekan Analizi" FontSize="18" FontWeight="Bold" Foreground="#1E293B" Margin="0,20,0,15"/>
+            <ItemsControl x:Name="RoomItemsControl">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="10" Margin="0,0,15,15" Padding="15" Width="300">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#2563EB"/>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14" Foreground="#1E293B"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding TotalHours, StringFormat='{}Toplam {0} Saat Kullanım'}" FontSize="12" Foreground="#64748B" Margin="25,0,0,10"/>
+                                
+                                <ItemsControl ItemsSource="{Binding Blocks}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8,6" Margin="0,0,0,6">
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                                                        <TextBlock Text="{Binding LessonName}" FontWeight="Bold" FontSize="12" Foreground="#0F172A"/>
+                                                        <TextBlock Text=" (Kardeş)" Foreground="#EF4444" FontSize="10" FontWeight="SemiBold" 
+                                                                   Visibility="{Binding IsKardes, Converter={StaticResource BoolToVis}}" Margin="5,0,0,0"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Duration, StringFormat='{}{0}s'}" FontWeight="Bold" FontSize="10" Foreground="#475569" Margin="0,0,8,0"/>
+                                                        <TextBlock Text="{Binding Status}" FontSize="11" Foreground="#64748B"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Combined Lessons Section -->
+            <TextBlock Text="Kardeş Ders Grupları" FontSize="18" FontWeight="Bold" Foreground="#1E293B" Margin="0,20,0,15"/>
+            <ItemsControl x:Name="CombinedItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="10" Margin="0,0,0,10" Padding="15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Border Grid.Column="0" Background="#FEF2F2" CornerRadius="6" Padding="10,5" Margin="0,0,15,0">
+                                    <TextBlock Text="{Binding Id, StringFormat='{}ID: {0}'}" FontWeight="Bold" Foreground="#EF4444"/>
+                                </Border>
+                                
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14" Foreground="#1E293B"/>
+                                    <ItemsControl ItemsSource="{Binding GroupItems}" Margin="0,5,0,0">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="#F1F5F9" CornerRadius="4" Padding="8,4" Margin="0,0,8,4">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding ClassName}" FontWeight="Bold" FontSize="11" Foreground="#475569" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{Binding LessonName}" FontSize="11" Foreground="#64748B" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{Binding TotalHours, StringFormat='({0}s)'}" FontSize="10" Foreground="#94A3B8"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                                
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                    <TextBlock Text="{Binding BlockCount, StringFormat='{}Blok Sayısı: {0}'}" FontSize="12" FontWeight="SemiBold" Foreground="#334155"/>
+                                    <TextBlock Text="{Binding TotalHours, StringFormat='{}Toplam Saat: {0}'}" FontSize="11" Foreground="#64748B"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

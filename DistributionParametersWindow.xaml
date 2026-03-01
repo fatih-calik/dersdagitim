@@ -1,0 +1,160 @@
+﻿<Window x:Class="DersDagitim.DistributionParametersWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dağıtım Parametreleri" Height="700" Width="500"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="#F8FAFC">
+    
+    <Border Padding="25" Background="#F8FAFC">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                <TextBlock Text="⚙️ Dağıtım Parametreleri" FontSize="24" FontWeight="Bold" Foreground="#1E293B"/>
+                <TextBlock Text="Optimizasyon ayarlarını aşağıdan düzenleyin" Foreground="#64748B" FontSize="12" Margin="0,5,0,0"/>
+            </StackPanel>
+            
+            <!-- Scrollable Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+
+                    <!-- Süre -->
+                    <Border Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock Text="⏱️ Düşünme/Hesaplama Süresi" Foreground="#334155" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="LabelTime" Text="300 saniye" Foreground="#0D9488" HorizontalAlignment="Right" FontWeight="Bold"/>
+                            </DockPanel>
+                            <Slider x:Name="SliderTime" Minimum="10" Maximum="300" Value="300" 
+                                    Margin="0,10,0,0" ValueChanged="SliderTime_ValueChanged"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Boşluk (Karnıyarık) Kontrolü -->
+                    <Border Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock Text="🚫 Karnıyarık Giderme" Foreground="#334155" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="LabelGap" Text="Yüksek" Foreground="#EF4444" HorizontalAlignment="Right" FontWeight="Bold"/>
+                            </DockPanel>
+                            <Slider x:Name="SliderGap" Minimum="0" Maximum="100" Value="0" 
+                                    Margin="0,10,0,0" ValueChanged="SliderGap_ValueChanged"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Boş Gün Oluşturma (Kompakt Mod) -->
+                    <Border Background="#FDF4FF" CornerRadius="8" Padding="15" Margin="0,0,0,15" BorderBrush="#F0ABFC" BorderThickness="2">
+                        <StackPanel>
+                            <CheckBox x:Name="CheckMinimizeDays" Content="📅 Boş Gün Oluştur (Kompakt Mod)" 
+                                      IsChecked="True" FontWeight="SemiBold" Foreground="#86198F"
+                                      ToolTip="Öğretmenlerin okula geldiği gün sayısını en aza indirmeye çalışır."/>
+                            <TextBlock Text="Az dersli günleri (örn. Cuma) diğer günlere dağıtarak öğretmene boş gün çıkarmaya çalışır." 
+                                       Foreground="#A21CAF" FontSize="11" Margin="24,5,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Modlar -->
+                    <Border Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="📋 Çalışma Modu" Foreground="#334155" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                            
+                            <CheckBox x:Name="CheckStrict" Content="Katı Mod (Tüm bloklar yerleşmeli)" 
+                                      IsChecked="True" Foreground="#475569" Margin="0,0,0,10"
+                                      ToolTip="Tüm blokların yerleştirilmesi zorunludur."/>
+                                      
+                            <TextBlock Text="Dağıtım Yöntemi" Foreground="#64748B" FontSize="11" Margin="0,0,0,3"/>
+                            <ComboBox x:Name="ComboResetMode" FontSize="12" Height="36" VerticalContentAlignment="Center">
+                                <ComboBoxItem Content="Tümünü Sil ve Yeniden Dağıt" IsSelected="True" Tag="ClearAll"/>
+                                <ComboBoxItem Content="Elle Sabitlenenleri Koru" Tag="KeepLocked"/>
+                                <ComboBoxItem Content="Dağıtılanları Silme (Sadece Yerleşemeyenler İçin)" Tag="KeepCurrent"/>
+                            </ComboBox>
+                            
+                            <CheckBox x:Name="CheckAnalysis" Content="Analiz Modu (Kısıtları esnet)" 
+                                      IsChecked="False" Foreground="#475569" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Sabah Önceliği - HIDDEN -->
+                    <Border Visibility="Collapsed">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock Text="🌅 Sabah Önceliği" Foreground="#334155" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="LabelMorning" Text="Orta" Foreground="#F59E0B" HorizontalAlignment="Right" FontWeight="Bold"/>
+                            </DockPanel>
+                            <Slider x:Name="SliderMorning" Minimum="0" Maximum="10" Value="3" IsEnabled="False"
+                                    Margin="0,10,0,0" ValueChanged="SliderMorning_ValueChanged"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Bitişik Ders Ödülü - HIDDEN -->
+                    <Border Visibility="Collapsed">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock Text="🔗 Bitişik Ders Ödülü" Foreground="#334155" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="LabelAdjacency" Text="Orta" Foreground="#06B6D4" HorizontalAlignment="Right" FontWeight="Bold"/>
+                            </DockPanel>
+                            <Slider x:Name="SliderAdjacency" Minimum="0" Maximum="100" Value="50"
+                                    Margin="0,10,0,0" ValueChanged="SliderAdjacency_ValueChanged"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Günlük Minimum Ders -->
+                    <Border Background="#F0FDF4" CornerRadius="8" Padding="15" Margin="0,0,0,15" BorderBrush="#BBF7D0" BorderThickness="2">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock Text="📚 Günlük Minimum Ders" Foreground="#166534" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="LabelMinDaily" Text="3 ders" Foreground="#16A34A" HorizontalAlignment="Right" FontWeight="Bold"/>
+                            </DockPanel>
+                            <Slider x:Name="SliderMinDaily" Minimum="1" Maximum="6" Value="3" 
+                                    Margin="0,10,0,0" ValueChanged="SliderMinDaily_ValueChanged"
+                                    IsSnapToTickEnabled="True" TickFrequency="1"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Yük Dengeleme - HIDDEN -->
+                    <Border Visibility="Collapsed">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock Text="⚖️ Yük Dengeleme" Foreground="#334155" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="LabelBalance" Text="Orta" Foreground="#22C55E" HorizontalAlignment="Right" FontWeight="Bold"/>
+                            </DockPanel>
+                            <Slider x:Name="SliderBalance" Minimum="0" Maximum="100" Value="50"
+                                    Margin="0,10,0,0" ValueChanged="SliderBalance_ValueChanged"/>
+                        </StackPanel>
+                    </Border>
+                    
+                </StackPanel>
+            </ScrollViewer>
+            
+            <!-- Buttons -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+
+                <Button Content="İptal" IsCancel="True" Padding="20,10" Margin="0,0,10,0"
+                        Background="#E2E8F0" Foreground="#475569" BorderThickness="0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="20,10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button Content="🚀 Dağıtımı Başlat" Click="Start_Click" IsDefault="True" Padding="20,10"
+                        Background="#3B82F6" Foreground="White" BorderThickness="0" FontWeight="Bold">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="20,10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
